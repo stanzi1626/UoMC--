@@ -1,0 +1,10 @@
+#Ignore all .vscode folders
+**.vscode/
+
+#Ignore all .dSYM folders
+**.dSYM/
+
+#Ignore all executables
+*
+!/**/
+!*.*
