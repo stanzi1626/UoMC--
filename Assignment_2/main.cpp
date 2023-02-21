@@ -52,7 +52,7 @@ int get_file_size()
     }
     file.close();
 
-    std::cout << "File size: " << size << std::endl;
+    std::cout << "File size: " << size <<  " entries" << std::endl;
 
     return size;
 }
@@ -127,6 +127,21 @@ void sort_year(std::vector<std::string> &course_name, std::vector<int> &course_c
     calculate_statistical_data(course_mark, indeces);
 }
 
+void sort_mark(std::vector<std::string> &course_name, std::vector<int> &course_code,
+               std::vector<float> &course_mark, std::set<int> &indeces, float mark, int file_size)
+{
+    for (int i = 0; i < file_size; i++)
+    {
+        if (course_mark[i] >= mark)
+        {
+            indeces.insert(i);
+        }
+    }
+
+    print_data(course_name, course_code, course_mark, indeces);
+    calculate_statistical_data(course_mark, indeces);
+}
+
 int main()
 {
     int file_size = get_file_size();
@@ -141,7 +156,7 @@ int main()
     bool program_running = true;
     do
     {
-        std::cout << "Enter a year to sort: ";
+        std::cout << "Enter a year to sort (between 1-4): ";
         int year;
         std::cin >> year;
 
