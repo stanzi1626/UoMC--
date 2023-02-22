@@ -21,9 +21,9 @@
 #include <set>
 
 void print_data(std::vector<std::string> &course_name, std::vector<int> &course_code,
-                std::vector<float> &course_mark, std::set<int> &indeces)
+                std::vector<float> &course_mark, std::set<int> &indices)
 {
-    for (std::set<int>::iterator it = indeces.begin(); it != indeces.end(); it++)
+    for (std::set<int>::iterator it = indices.begin(); it != indices.end(); ++it)
     {
         std::cout << course_mark[*it] << " " << course_code[*it] << " " << course_name[*it] << std::endl;
     }
@@ -86,26 +86,26 @@ void read_file(std::vector<std::string> &course_name, std::vector<int> &course_c
     file.close();
 }
 
-void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indeces)
+void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indices)
 {
     float mean = 0;
     float standard_deviation = 0;
     float standard_error_of_mean = 0;
 
-    for (std::set<int>::iterator it = indeces.begin(); it != indeces.end(); it++)
+    for (std::set<int>::iterator it = indices.begin(); it != indices.end(); it++)
     {
         mean += marks[*it];
     }
-    mean /= indeces.size();
+    mean /= indices.size();
 
-    for (std::set<int>::iterator it = indeces.begin(); it != indeces.end(); it++)
+    for (std::set<int>::iterator it = indices.begin(); it != indices.end(); it++)
     {
         standard_deviation += pow(marks[*it] - mean, 2);
     }
-    standard_deviation /= indeces.size();
+    standard_deviation /= indices.size();
     standard_deviation = sqrt(standard_deviation);
 
-    standard_error_of_mean = standard_deviation / sqrt(indeces.size());
+    standard_error_of_mean = standard_deviation / sqrt(indices.size());
 
     std::cout << "Mean: " << mean << std::endl;
     std::cout << "Standard deviation: " << standard_deviation << std::endl;
@@ -113,33 +113,49 @@ void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indece
 }
 
 void sort_year(std::vector<std::string> &course_name, std::vector<int> &course_code,
-               std::vector<float> &course_mark, std::set<int> &indeces, int year, int file_size)
+               std::vector<float> &course_mark, std::set<int> &indices, int year, int file_size)
 {
-    for (int i = 0; i < file_size; i++)
-    {
-        if (course_code[i] / 10000 == year)
-        {
-            indeces.insert(i);
+    if (indices.size() == 0) {
+        for (int i = 0; i < file_size; i++) {
+            if (course_code[i] / 10000 == year) {
+                indices.insert(i);
+            }
+        }
+    } else {
+        for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
+            if (course_code[*it] / 10000 != year) {
+                indices.erase(it++);
+            } else {
+                ++it;
+            }
         }
     }
 
-    print_data(course_name, course_code, course_mark, indeces);
-    calculate_statistical_data(course_mark, indeces);
+    print_data(course_name, course_code, course_mark, indices);
+    calculate_statistical_data(course_mark, indices);
 }
 
 void sort_mark(std::vector<std::string> &course_name, std::vector<int> &course_code,
-               std::vector<float> &course_mark, std::set<int> &indeces, float mark, int file_size)
+               std::vector<float> &course_mark, std::set<int> &indices, float mark, int file_size)
 {
-    for (int i = 0; i < file_size; i++)
-    {
-        if (course_mark[i] >= mark)
-        {
-            indeces.insert(i);
+    if (indices.size() == 0) {
+        for (int i = 0; i < file_size; i++) {
+            if (course_mark[i] >= mark) {
+                indices.insert(i);
+            }
+        }
+    } else {
+        for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
+            if (course_mark[*it] < mark) {
+                indices.erase(it++);
+            } else {
+                ++it;
+            }
         }
     }
 
-    print_data(course_name, course_code, course_mark, indeces);
-    calculate_statistical_data(course_mark, indeces);
+    print_data(course_name, course_code, course_mark, indices);
+    calculate_statistical_data(course_mark, indices);
 }
 
 int main()
@@ -149,7 +165,7 @@ int main()
     std::vector<std::string> root_course_name;
     std::vector<int> root_course_code;
     std::vector<float> root_course_mark;
-    std::set<int> indeces;
+    std::set<int> indices;
 
     read_file(root_course_name, root_course_code, root_course_mark);
 
@@ -160,14 +176,21 @@ int main()
         int year;
         std::cin >> year;
 
-        sort_year(root_course_name, root_course_code, root_course_mark, indeces, year, file_size);
+        sort_year(root_course_name, root_course_code, root_course_mark, indices, year, file_size);
+
+        std::cout << "Enter a mark: ";
+        int mark;
+        std::cin >> mark;
+
+        sort_mark(root_course_name, root_course_code, root_course_mark, indices, mark, file_size);
+
         break;
     } while (program_running);
     
     
 
     // Debug
-    // std::cout << root_indeces << std::endl;
+    // std::cout << root_indices << std::endl;
     // calculate_statistical_data(course_mark);
 
     return 0;
