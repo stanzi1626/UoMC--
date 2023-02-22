@@ -1,17 +1,3 @@
-// • Write a program to read the data and compute the mean, standard deviation and
-// standard error of the mean for the coursework marks.
-// • The code should determine the number of data entries in the file. DONE
-// • You must either use new to allocate an array or if you know how to use to, use
-// vectors as required for part 2.
-// • Be efficient in storage. You now have to use vectors for storage.
-// • Use a string stream to create a string containing the full course title e.g.
-//  PHYS 30762 Object-Oriented Programming in C++
-// • Each of these strings should be stored in a single vector.
-// • Print out the full course list using an iterator.
-// • Your code should be able to print out a list of courses for a particular year, as
-// identified by the first digit of the course code, including the mean and standard
-// deviation for those courses.
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -181,6 +167,7 @@ void sort_mark_into_descending_order(std::vector<std::string> &course_name, std:
             }
         }
     }
+    std::cout << "Successfully sorted mark of courses into descending order" << std::endl;
 }
 
 void sort_name_into_alphabetical_order(std::vector<std::string> &course_name, std::vector<int> &course_code,
@@ -195,6 +182,22 @@ void sort_name_into_alphabetical_order(std::vector<std::string> &course_name, st
             }
         }
     }
+    std::cout << "Successfully sorted name of courses into alphabetical order" << std::endl;
+}
+
+void sort_code_into_ascending_order(std::vector<std::string> &course_name, std::vector<int> &course_code,
+               std::vector<float> &course_mark, int file_size)
+{
+    for (unsigned int i = 0; i < file_size; i++) {
+        for (unsigned int j = i + 1; j < file_size; j++) {
+            if (course_code[i] > course_code[j]) {
+                std::swap(course_mark[i], course_mark[j]);
+                std::swap(course_code[i], course_code[j]);
+                std::swap(course_name[i], course_name[j]);
+            }
+        }
+    }
+    std::cout << "Successfully sorted code of courses into ascending order" << std::endl;
 }
 
 void year_check(int &year)
@@ -233,15 +236,55 @@ void mark_check(float &mark)
     } while (true);
 }
 
-void print_menu()
+void print_sort_menu()
+{
+    std::cout << std::endl << "1. Sort by mark" << std::endl;
+    std::cout << "2. Sort by name" << std::endl;
+    std::cout << "3. Sort by code" << std::endl << std::endl;
+}
+
+void sort_menu_check(int &sort_option)
+{
+    do {
+        std::cin >> sort_option;
+
+        if (sort_option < 1 || sort_option > 3 || std::cin.fail()) {
+            std::cout << "Please enter a valid option" << std::endl;
+            std::cin.clear();
+            std::cin.ignore(256, '\n');
+            continue;
+        } else {
+            std::cin.clear();
+            std::cin.ignore(256, '\n');
+            break;
+        }
+    } while (true);
+}
+
+void sort_menu_options(int &sort_option, std::vector<std::string> &course_name, std::vector<int> &course_code,
+               std::vector<float> &course_mark, int file_size)
+{
+    switch (sort_option) {
+        case 1:
+            sort_mark_into_descending_order(course_name, course_code, course_mark, file_size);
+            break;
+        case 2:
+            sort_name_into_alphabetical_order(course_name, course_code, course_mark, file_size);
+            break;
+        case 3:
+            sort_code_into_ascending_order(course_name, course_code, course_mark, file_size);
+            break;
+    }
+}
+
+void print_main_menu()
 {
     std::cout << std::endl << "1. Filter by year" << std::endl;
     std::cout << "2. Filter by mark" << std::endl;
-    std::cout << "3. Sort name into alphabetical order" << std::endl;
-    std::cout << "4. Sort mark into descending order" << std::endl;
-    std::cout << "5. Print" << std::endl;
-    std::cout << "6. Reset" << std::endl;
-    std::cout << "7. Exit" << std::endl << std::endl;
+    std::cout << "3. Sort data" << std::endl;
+    std::cout << "4. Print" << std::endl;
+    std::cout << "5. Reset" << std::endl;
+    std::cout << "6. Exit" << std::endl << std::endl;
 }
 
 int main_menu_check(int &menu_option)
@@ -269,31 +312,32 @@ void main_menu_options(int menu_option, std::vector<std::string> &course_name, s
 {
     switch (menu_option) {
     case 1:
-        std::cout << "Enter a year to sort (between 1-4): " << std::endl;
+        std::cout << "Enter a year to filter (between 1-4): " << std::endl;
         int year;
         year_check(year);
         filter_year(course_name, course_code, course_mark, indices, year, file_size);
         break;
     case 2:
-        std::cout << "Enter a mark to sort (between 0-100): " << std::endl;
+        std::cout << "Enter a mark to filter (between 0-100): " << std::endl;
         float mark;
         mark_check(mark);
         filter_mark(course_name, course_code, course_mark, indices, mark, file_size);
         break;
     case 3:
-        sort_name_into_alphabetical_order(course_name, course_code, course_mark, file_size);
+        int sort_option;
+        print_sort_menu();
+        sort_menu_check(sort_option);
+        std::cout << "You picked option: " << sort_option << std::endl;
+        sort_menu_options(sort_option, course_name, course_code, course_mark, file_size);
         break;
     case 4:
-        sort_mark_into_descending_order(course_name, course_code, course_mark, file_size);
-        break;
-    case 5:
         print_data(course_name, course_code, course_mark, indices);
         calculate_statistical_data(course_mark, indices);
         break;
-    case 6:
+    case 5:
         indices.clear();
         break;
-    case 7:
+    case 6:
         std::cout << "Exiting..." << std::endl;
         break;
     }
@@ -318,12 +362,12 @@ int main()
     int menu_option;
     while(true) {
         print_divider();
-        print_menu();
+        print_main_menu();
         main_menu_check(menu_option);
         std::cout << "You picked option: " << menu_option << std::endl << std::endl;
         main_menu_options(menu_option, root_course_name, root_course_code, root_course_mark, indices, file_size);
 
-        if (menu_option == 7) {
+        if (menu_option == 6) {
             break;
         }
     }
