@@ -58,7 +58,6 @@ int get_file_size()
         size++;
     }
     file.close();
-
     std::cout << "File size: " << size <<  " entries" << std::endl;
 
     return size;
@@ -74,8 +73,7 @@ void read_file(std::vector<std::string> &course_name, std::vector<int> &course_c
     std::fstream file;
     file.open("courselist.dat");
     int index = 0;
-    while (!file.eof())
-    {
+    while (!file.eof()) {
         std::string line;
         std::getline(file, line);
         if (line == "") continue;
@@ -376,8 +374,7 @@ int main_menu_check(int &menu_option)
  * @param menu_option
  * @return menu_option
  */
-    do
-    {
+    do {
         std::cin >> menu_option;
 
         if (menu_option < 1 || menu_option > 7 || std::cin.fail() || std::cin.peek() != '\n') {
@@ -402,13 +399,13 @@ void main_menu_options(int menu_option, std::vector<std::string> &course_name, s
  */
     switch (menu_option) {
     case 1:
-        std::cout << "Enter a year to filter (between 1-4): " << std::endl;
+        std::cout << "Which year would you like to look at (between 1-4)?: " << std::endl;
         int year;
         year_check(year);
         filter_year(course_name, course_code, course_mark, indices, year, file_size);
         break;
     case 2:
-        std::cout << "Enter a mark to filter: " << std::endl;
+        std::cout << "Enter a mark to filter (any course with a mark lower than this will be filtered out): " << std::endl;
         float mark;
         mark_check(mark, course_mark, indices);
         filter_mark(course_name, course_code, course_mark, indices, mark, file_size);
@@ -468,9 +465,7 @@ int main()
         std::cout << "You picked option: " << menu_option << std::endl << std::endl;
         main_menu_options(menu_option, root_course_name, root_course_code, root_course_mark, indices, file_size);
 
-        if (menu_option == 5) {
-            break;
-        }
+        if (menu_option == 5) break;
     }
     return 0;
 }
