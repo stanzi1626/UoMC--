@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <algorithm>
 #include <fstream>
 #include <string>
@@ -134,9 +135,9 @@ void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indice
         standard_deviation = sqrt(standard_deviation);
         standard_error_of_mean = standard_deviation / sqrt(indices.size());
     }
-    std::cout << std::endl << "Mean: " << mean << std::endl;
-    std::cout << "Standard deviation: " << standard_deviation << std::endl;
-    std::cout << "Standard error of mean: " << standard_error_of_mean << std::endl << std::endl;
+    std::cout.setf(std::ios::fixed, std::ios::floatfield);
+    std::cout << std::endl << "Mean: " << std::setprecision(1) << mean << " +/- " << standard_error_of_mean << std::endl;
+    std::cout << "Standard deviation: " << std::setprecision(1) << standard_deviation << std::endl;
 }
 
 void filter_year(std::vector<std::string> &course_name, std::vector<int> &course_code,
@@ -440,6 +441,10 @@ void print_divider()
 
 int main()
 {
+/**
+ * @brief This function calls all the other functions and is the main function
+ * @return 0
+ */
     int file_size = get_file_size();
 
     std::vector<std::string> root_course_name;
