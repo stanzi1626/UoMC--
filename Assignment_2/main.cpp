@@ -10,6 +10,11 @@
 template <typename T>
 std::string num_to_string(T i)
 {
+/**
+ * @brief This function converts a number (either int or float) to a string
+ * @param i
+ * @return i converted to a string
+ */
     std::stringstream ss;
     ss << i;
     return ss.str();
@@ -18,6 +23,10 @@ std::string num_to_string(T i)
 void print_data(std::vector<std::string> &course_name, std::vector<int> &course_code,
                 std::vector<float> &course_mark, std::set<int> &indices)
 {
+/**
+ * @brief This function prints the data at the specified indices if any are specified, otherwise it prints all the data
+ * @param course_name, course_code, course_mark, indices
+ */
     if (indices.size() == 0) {
         for (unsigned int i = 0; i < course_name.size(); i++) {
             std::cout << num_to_string(course_mark[i]) + " PHYS" + num_to_string(course_code[i])\
@@ -33,6 +42,10 @@ void print_data(std::vector<std::string> &course_name, std::vector<int> &course_
 
 int get_file_size()
 {
+/**
+ * @brief This function gets the size of the file, only reading lines with data (no blank lines)
+ * @return The file size
+ */
     int size = 0;
 
     std::fstream file;
@@ -53,6 +66,10 @@ int get_file_size()
 void read_file(std::vector<std::string> &course_name, std::vector<int> &course_code,
                std::vector<float> &course_mark)
 {
+/**
+ * @brief This function reads the file and stores the data in the vectors
+ * @param course_name, course_code, course_mark
+ */
     std::fstream file;
     file.open("courselist.dat");
     int index = 0;
@@ -82,6 +99,12 @@ void read_file(std::vector<std::string> &course_name, std::vector<int> &course_c
 
 void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indices)
 {
+/**
+ * @brief This function calculates the mean, standard deviation and standard error of mean of the marks at the specified
+ * indices if any are specified, otherwise it calculates the mean, standard deviation and standard error of mean of all
+ * the marks
+ * @param marks, indices
+ */
     float mean = 0;
     float standard_deviation = 0;
     float standard_error_of_mean = 0;
@@ -119,6 +142,10 @@ void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indice
 void filter_year(std::vector<std::string> &course_name, std::vector<int> &course_code,
                 std::vector<float> &course_mark, std::set<int> &indices, int year, int file_size)
 {
+/**
+ * @brief This function filters the year of courses, with anything not in the year being removed
+ * @param course_name, course_code, course_mark, indices, year, file_size
+ */
     if (indices.size() != 0) {
         for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
             if (course_code[*it] / 10000 != year) {
@@ -140,6 +167,10 @@ void filter_year(std::vector<std::string> &course_name, std::vector<int> &course
 void filter_mark(std::vector<std::string> &course_name, std::vector<int> &course_code,
                 std::vector<float> &course_mark, std::set<int> &indices, float mark, int file_size)
 {
+/**
+ * @brief This function filters the mark of courses, with anything below the mark being removed
+ * @param course_name, course_code, course_mark, indices, mark, file_size
+ */
     if (indices.size() != 0) {
         for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
             if (course_mark[*it] < mark) {
@@ -161,6 +192,10 @@ void filter_mark(std::vector<std::string> &course_name, std::vector<int> &course
 void sort_mark_into_descending_order(std::vector<std::string> &course_name, std::vector<int> &course_code,
                std::vector<float> &course_mark, int file_size)
 {
+/**
+ * @brief This function sorts the mark of courses into descending order
+ * @param course_name, course_code, course_mark, file_size
+ */
     for (unsigned int i = 0; i < file_size; i++) {
         for (unsigned int j = i + 1; j < file_size; j++) {
             if (course_mark[i] < course_mark[j]) {
@@ -176,6 +211,10 @@ void sort_mark_into_descending_order(std::vector<std::string> &course_name, std:
 void sort_name_into_alphabetical_order(std::vector<std::string> &course_name, std::vector<int> &course_code,
                std::vector<float> &course_mark, int file_size)
 {
+/**
+ * @brief This function sorts the name of courses into alphabetical order
+ * @param course_name, course_code, course_mark, file_size
+ */
     for (unsigned int i = 0; i < file_size; i++) {
         for (unsigned int j = i + 1; j < file_size; j++) {
             if (course_name[i] > course_name[j]) {
@@ -191,6 +230,10 @@ void sort_name_into_alphabetical_order(std::vector<std::string> &course_name, st
 void sort_code_into_ascending_order(std::vector<std::string> &course_name, std::vector<int> &course_code,
                std::vector<float> &course_mark, int file_size)
 {
+/**
+ * @brief This function sorts the code of courses into ascending order
+ * @param course_name, course_code, course_mark, file_size
+ */
     for (unsigned int i = 0; i < file_size; i++) {
         for (unsigned int j = i + 1; j < file_size; j++) {
             if (course_code[i] > course_code[j]) {
@@ -205,10 +248,14 @@ void sort_code_into_ascending_order(std::vector<std::string> &course_name, std::
 
 void year_check(int &year)
 {
+/**
+ * @brief This function checks if the year entered by the user is valid, has to be between 1 and 4
+ * @param year
+ */
     do {
         std::cin >> year;
 
-        if (year < 1 || year > 4 || std::cin.fail()) {
+        if (year < 1 || year > 4 || std::cin.fail() || std::cin.peek() != '\n') {
             std::cout << "Please enter a valid year between 1-4" << std::endl;
             std::cin.clear();
             std::cin.ignore(256, '\n');
@@ -223,6 +270,11 @@ void year_check(int &year)
 
 void mark_check(float &mark, std::vector<float> course_marks, std::set<int> indices)
 {
+/**
+ * @brief This function checks if the mark entered by the user is valid, has to be between 0 and the maximum mark of current
+ * sorted elements
+ * @param mark, course_marks, indices
+ */
     float max_mark = 0;
     if (indices.size() == 0) {
         max_mark = *std::max_element(course_marks.begin(), course_marks.end());
@@ -236,9 +288,8 @@ void mark_check(float &mark, std::vector<float> course_marks, std::set<int> indi
     do {
         std::cin >> mark;
 
-        if (mark < 0 || mark > max_mark || std::cin.fail()) {
-            std::cout << "Please enter a valid mark between 0-" << max_mark\
-            << " (anything below this value will be filtered out)" << std::endl;
+        if (mark < 0 || mark > max_mark || std::cin.fail() || std::cin.peek() != '\n') {
+            std::cout << "Please enter a valid mark between 0-" << max_mark << std::endl;
             std::cin.clear();
             std::cin.ignore(256, '\n');
             continue;
@@ -252,6 +303,10 @@ void mark_check(float &mark, std::vector<float> course_marks, std::set<int> indi
 
 void print_sort_menu()
 {
+/**
+ * @brief This function prints the sort menu
+ * @param none
+ */
     std::cout << std::endl << "1. Sort by mark" << std::endl;
     std::cout << "2. Sort by name" << std::endl;
     std::cout << "3. Sort by code" << std::endl << std::endl;
@@ -259,10 +314,15 @@ void print_sort_menu()
 
 void sort_menu_check(int &sort_option)
 {
+/**
+ * @brief This function checks if the sort option entered by the user is valid, has to be and integered between 1 and 3
+ * inclusive
+ * @param sort_option
+ */
     do {
         std::cin >> sort_option;
 
-        if (sort_option < 1 || sort_option > 3 || std::cin.fail()) {
+        if (sort_option < 1 || sort_option > 3 || std::cin.fail() || std::cin.peek() != '\n') {
             std::cout << "Please enter a valid option" << std::endl;
             std::cin.clear();
             std::cin.ignore(256, '\n');
@@ -278,6 +338,10 @@ void sort_menu_check(int &sort_option)
 void sort_menu_options(int &sort_option, std::vector<std::string> &course_name, std::vector<int> &course_code,
                std::vector<float> &course_mark, int file_size)
 {
+/**
+ * @brief This function sorts the courses according to the option chosen by the user
+ * @param sort_option, course_name, course_code, course_mark, file_size
+ */
     switch (sort_option) {
         case 1:
             sort_mark_into_descending_order(course_name, course_code, course_mark, file_size);
@@ -293,6 +357,9 @@ void sort_menu_options(int &sort_option, std::vector<std::string> &course_name, 
 
 void print_main_menu()
 {
+/**
+ * @brief This function prints the main menu
+ */
     std::cout << std::endl << "1. Filter by year" << std::endl;
     std::cout << "2. Filter by mark" << std::endl;
     std::cout << "3. Print" << std::endl;
@@ -302,11 +369,17 @@ void print_main_menu()
 
 int main_menu_check(int &menu_option)
 {
+/**
+ * @brief This function checks if the main menu option entered by the user is valid, has to be an integer between 1 and 5
+ * inclusive
+ * @param menu_option
+ * @return menu_option
+ */
     do
     {
         std::cin >> menu_option;
 
-        if (menu_option < 1 || menu_option > 7 || std::cin.fail()) {
+        if (menu_option < 1 || menu_option > 7 || std::cin.fail() || std::cin.peek() != '\n') {
             std::cout << "Please enter a valid option" << std::endl;
             std::cin.clear();
             std::cin.ignore(256, '\n');
@@ -323,6 +396,9 @@ int main_menu_check(int &menu_option)
 void main_menu_options(int menu_option, std::vector<std::string> &course_name, std::vector<int> &course_code,
                        std::vector<float> &course_mark, std::set<int> &indices, int file_size)
 {
+/**
+ * @brief This function calls the functions according to the option chosen by the user
+ */
     switch (menu_option) {
     case 1:
         std::cout << "Enter a year to filter (between 1-4): " << std::endl;
@@ -356,6 +432,9 @@ void main_menu_options(int menu_option, std::vector<std::string> &course_name, s
 
 void print_divider()
 {
+/**
+ * @brief This function prints a divider to separate the menu options
+ */
     std::cout << "----------------------------------------" << std::endl;
 }
 
