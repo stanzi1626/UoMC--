@@ -6,28 +6,29 @@
 #include <cmath>
 #include <set>
 
+template <typename T>
+std::string num_to_string(T i)
+{
+    std::stringstream ss;
+    ss << i;
+    return ss.str();
+}
+
 void print_data(std::vector<std::string> &course_name, std::vector<int> &course_code,
                 std::vector<float> &course_mark, std::set<int> &indices)
 {
     if (indices.size() == 0) {
         for (unsigned int i = 0; i < course_name.size(); i++) {
-            std::cout << course_mark[i] << " " << course_code[i] << " " << course_name[i] << std::endl;
+            std::cout << num_to_string(course_mark[i]) + " PHYS" + num_to_string(course_code[i])\
+            + " " + course_name[i] << std::endl;
         }
     } else {
-        for (std::set<int>::iterator it = indices.begin(); it != indices.end(); ++it)
-        {
-            std::cout << course_mark[*it] << " " << course_code[*it] << " " << course_name[*it] << std::endl;
+        for (std::set<int>::iterator it = indices.begin(); it != indices.end(); ++it) {
+            std::cout << num_to_string(course_mark[*it]) + " PHYS" + num_to_string(course_code[*it])\
+            + " " + course_name[*it] << std::endl;
         }
     }
 }
-
-template <typename T>
-std::ostream& operator << (std::ostream& out, const std::vector<T>& vec) {
-		for (unsigned int j = 0; j < vec.size(); j++) {
-			out << '[' << vec[j] << ']' << std::endl;
-		}
-		return out;
-	}
 
 int get_file_size()
 {
@@ -35,8 +36,7 @@ int get_file_size()
 
     std::fstream file;
     file.open("courselist.dat");
-    while (!file.eof())
-    {
+    while (!file.eof()) {
         std::string line;
         std::getline(file, line);
         if (line == "") continue;
@@ -118,13 +118,7 @@ void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indice
 void filter_year(std::vector<std::string> &course_name, std::vector<int> &course_code,
                std::vector<float> &course_mark, std::set<int> &indices, int year, int file_size)
 {
-    if (indices.size() == 0) {
-        for (unsigned int i = 0; i < file_size; i++) {
-            if (course_code[i] / 10000 == year) {
-                indices.insert(i);
-            }
-        }
-    } else {
+    if (indices.size() != 0) {
         for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
             if (course_code[*it] / 10000 != year) {
                 indices.erase(it++);
@@ -133,23 +127,31 @@ void filter_year(std::vector<std::string> &course_name, std::vector<int> &course
             }
         }
     }
+    if (indices.size() == 0) {
+        for (unsigned int i = 0; i < file_size; i++) {
+            if (course_code[i] / 10000 == year) {
+                indices.insert(i);
+            }
+        }
+    } 
 }
 
 void filter_mark(std::vector<std::string> &course_name, std::vector<int> &course_code,
                std::vector<float> &course_mark, std::set<int> &indices, float mark, int file_size)
 {
-    if (indices.size() == 0) {
-        for (unsigned int i = 0; i < file_size; i++) {
-            if (course_mark[i] >= mark) {
-                indices.insert(i);
-            }
-        }
-    } else {
+    if (indices.size() != 0) {
         for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
             if (course_mark[*it] < mark) {
                 indices.erase(it++);
             } else {
                 ++it;
+            }
+        }
+    }
+    if (indices.size() == 0) {
+        for (unsigned int i = 0; i < file_size; i++) {
+            if (course_mark[i] >= mark) {
+                indices.insert(i);
             }
         }
     }
@@ -281,10 +283,9 @@ void print_main_menu()
 {
     std::cout << std::endl << "1. Filter by year" << std::endl;
     std::cout << "2. Filter by mark" << std::endl;
-    std::cout << "3. Sort data" << std::endl;
-    std::cout << "4. Print" << std::endl;
-    std::cout << "5. Reset" << std::endl;
-    std::cout << "6. Exit" << std::endl << std::endl;
+    std::cout << "3. Print" << std::endl;
+    std::cout << "4. Reset and sort again" << std::endl;
+    std::cout << "5. Exit" << std::endl << std::endl;
 }
 
 int main_menu_check(int &menu_option)
@@ -324,20 +325,18 @@ void main_menu_options(int menu_option, std::vector<std::string> &course_name, s
         filter_mark(course_name, course_code, course_mark, indices, mark, file_size);
         break;
     case 3:
+        print_data(course_name, course_code, course_mark, indices);
+        calculate_statistical_data(course_mark, indices);
+        break;
+    case 4:
+        indices.clear();
         int sort_option;
         print_sort_menu();
         sort_menu_check(sort_option);
         std::cout << "You picked option: " << sort_option << std::endl;
         sort_menu_options(sort_option, course_name, course_code, course_mark, file_size);
         break;
-    case 4:
-        print_data(course_name, course_code, course_mark, indices);
-        calculate_statistical_data(course_mark, indices);
-        break;
     case 5:
-        indices.clear();
-        break;
-    case 6:
         std::cout << "Exiting..." << std::endl;
         break;
     }
@@ -359,6 +358,12 @@ int main()
 
     read_file(root_course_name, root_course_code, root_course_mark);
 
+    int sort_option;
+    print_sort_menu();
+    sort_menu_check(sort_option);
+    std::cout << "You picked option: " << sort_option << std::endl;
+    sort_menu_options(sort_option, root_course_name, root_course_code, root_course_mark, file_size);
+
     int menu_option;
     while(true) {
         print_divider();
@@ -367,7 +372,7 @@ int main()
         std::cout << "You picked option: " << menu_option << std::endl << std::endl;
         main_menu_options(menu_option, root_course_name, root_course_code, root_course_mark, indices, file_size);
 
-        if (menu_option == 6) {
+        if (menu_option == 5) {
             break;
         }
     }
