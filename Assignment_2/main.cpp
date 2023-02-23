@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -94,7 +95,7 @@ void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indice
         for (unsigned int i = 0; i < marks.size(); i++) {
             standard_deviation += pow(marks[i] - mean, 2);
         }
-        standard_deviation /= marks.size();
+        standard_deviation /= (marks.size() - 1);
         standard_deviation = sqrt(standard_deviation);
         standard_error_of_mean = standard_deviation / sqrt(marks.size());
     } else {
@@ -106,7 +107,7 @@ void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indice
         for (std::set<int>::iterator it = indices.begin(); it != indices.end(); it++) {
             standard_deviation += pow(marks[*it] - mean, 2);
         }
-        standard_deviation /= indices.size();
+        standard_deviation /= (indices.size() - 1);
         standard_deviation = sqrt(standard_deviation);
         standard_error_of_mean = standard_deviation / sqrt(indices.size());
     }
@@ -116,7 +117,7 @@ void calculate_statistical_data(std::vector<float> &marks, std::set<int> &indice
 }
 
 void filter_year(std::vector<std::string> &course_name, std::vector<int> &course_code,
-               std::vector<float> &course_mark, std::set<int> &indices, int year, int file_size)
+                std::vector<float> &course_mark, std::set<int> &indices, int year, int file_size)
 {
     if (indices.size() != 0) {
         for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
@@ -137,7 +138,7 @@ void filter_year(std::vector<std::string> &course_name, std::vector<int> &course
 }
 
 void filter_mark(std::vector<std::string> &course_name, std::vector<int> &course_code,
-               std::vector<float> &course_mark, std::set<int> &indices, float mark, int file_size)
+                std::vector<float> &course_mark, std::set<int> &indices, float mark, int file_size)
 {
     if (indices.size() != 0) {
         for (std::set<int>::iterator it = indices.begin(); it != indices.end();) {
@@ -220,13 +221,24 @@ void year_check(int &year)
     } while (true);
 }
 
-void mark_check(float &mark)
+void mark_check(float &mark, std::vector<float> course_marks, std::set<int> indices)
 {
+    float max_mark = 0;
+    if (indices.size() == 0) {
+        max_mark = *std::max_element(course_marks.begin(), course_marks.end());
+    } else {
+        for (std::set<int>::iterator it = indices.begin(); it != indices.end(); ++it) {
+            if (course_marks[*it] > max_mark) {
+                max_mark = course_marks[*it];
+            }
+        }
+    }
     do {
         std::cin >> mark;
 
-        if (mark < 0 || mark > 100 || std::cin.fail()) {
-            std::cout << "Please enter a valid mark between 0-100" << std::endl;
+        if (mark < 0 || mark > max_mark || std::cin.fail()) {
+            std::cout << "Please enter a valid mark between 0-" << max_mark\
+            << " (anything below this value will be filtered out)" << std::endl;
             std::cin.clear();
             std::cin.ignore(256, '\n');
             continue;
@@ -319,9 +331,9 @@ void main_menu_options(int menu_option, std::vector<std::string> &course_name, s
         filter_year(course_name, course_code, course_mark, indices, year, file_size);
         break;
     case 2:
-        std::cout << "Enter a mark to filter (between 0-100): " << std::endl;
+        std::cout << "Enter a mark to filter: " << std::endl;
         float mark;
-        mark_check(mark);
+        mark_check(mark, course_mark, indices);
         filter_mark(course_name, course_code, course_mark, indices, mark, file_size);
         break;
     case 3:
