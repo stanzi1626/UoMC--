@@ -1,9 +1,29 @@
 #include <iostream>
 #include <cmath>
 
-enum hubble_type{
+enum hubble_type {
     E0, E3, E5, E7, S0, Sa, Sb, Sc, SBa, SBb, SBc, Irr
 };
+
+std::ostream& operator<<(std::ostream& os, const hubble_type ht)
+{
+  switch(ht)
+  {
+    case hubble_type::E0: os << "E0"; break;
+    case hubble_type::E3: os << "E3"; break;
+    case hubble_type::E5: os << "E5"; break;
+    case hubble_type::E7: os << "E7"; break;
+    case hubble_type::S0: os << "S0"; break;
+    case hubble_type::Sa: os << "Sa"; break;
+    case hubble_type::Sb: os << "Sb"; break;
+    case hubble_type::Sc: os << "Sc"; break;
+    case hubble_type::SBa: os << "SBa"; break;
+    case hubble_type::SBb: os << "SBb"; break;
+    case hubble_type::SBc: os << "SBc"; break;
+    case hubble_type::Irr: os << "Irr"; break;
+  }
+  return os;
+}
 
 class Galaxy {
 private:
