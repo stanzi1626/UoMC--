@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 enum hubble_type {
     E0, E3, E5, E7, S0, Sa, Sb, Sc, SBa, SBb, SBc, Irr
@@ -25,12 +26,29 @@ std::ostream& operator<<(std::ostream& os, const hubble_type ht)
   return os;
 }
 
+void print_enum_galaxy_values()
+{
+    std::cout << "E0: " << "0" << std::endl;
+    std::cout << "E3: " << "1" << std::endl;
+    std::cout << "E5: " << "2" << std::endl;
+    std::cout << "E7: " << "3" << std::endl;
+    std::cout << "S0: " << "4" << std::endl;
+    std::cout << "Sa: " << "5" << std::endl;
+    std::cout << "Sb: " << "6" << std::endl;
+    std::cout << "Sc: " << "7" << std::endl;
+    std::cout << "SBa: " << "8" << std::endl;
+    std::cout << "SBb: " << "9" << std::endl;
+    std::cout << "SBc: " << "10" << std::endl;
+    std::cout << "Irr: " << "11" << std::endl;
+}
+
 class Galaxy {
 private:
     hubble_type galaxy_type;
     double total_mass;
     double stellar_mass_fraction;
     double redshift;
+    std::vector<Galaxy> satellites;
 
 public:
     Galaxy()
@@ -40,103 +58,56 @@ public:
 
     Galaxy(hubble_type galaxy_type, double total_mass, double stellar_mass_fraction, double redshift)
     : galaxy_type(galaxy_type), total_mass(total_mass), stellar_mass_fraction(stellar_mass_fraction), redshift(redshift)
-    {
-        std::cout << "Galaxy(hubble_type, double, double, double)" << std::endl;
-    }
+    {}
 
-    ~Galaxy()
-    {
-        std::cout << "~Galaxy()" << std::endl;
-    }
+    ~Galaxy() {}
 
     void print_stellar_mass()
     {
         std::cout << "Stellar mass: " << pow(10, total_mass) * stellar_mass_fraction << " solar masses" << std::endl;
     }
 
+    Galaxy create_random_galaxy(){
+        hubble_type galaxy_type;
+        double total_mass;
+        double stellar_mass_fraction;
+        double redshift;
+
+        galaxy_type = static_cast<hubble_type>(rand() % 12);
+        total_mass = 7 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (12 - 7)));
+        stellar_mass_fraction = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (0.05 - 0)));
+        redshift = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (10 - 0)));
+
+        Galaxy galaxy(galaxy_type, total_mass, stellar_mass_fraction, redshift);
+        return galaxy;
+    }
+
+    void add_satellites()
+    {
+        for (int i = 0; i < rand() % 10; i++) {
+            satellites.push_back(create_random_galaxy());
+        }
+    }
+
     void print_galaxy_data()
     {
-
+        std::cout << "----------------------------------------" << std::endl;
         std::cout << "Galaxy type: " << galaxy_type << std::endl;
         std::cout << "Total mass: " << pow(10, total_mass) << " solar masses" << std::endl;
         std::cout << "Stellar mass fraction: " << stellar_mass_fraction << std::endl;
-        std::cout << "Redshift: " << redshift << std::endl;
+        std::cout << "Redshift: " << redshift << std::endl << std::endl;
+
+        std::cout << "Number of satellites: " << satellites.size() << std::endl;
+        for (auto itr = satellites.begin(); itr != satellites.end(); ++itr) {
+            itr -> print_galaxy_data();
+        }
+    }
+
+    void change_galaxy_type(hubble_type galaxy_type)
+    {
+        this->galaxy_type = galaxy_type;
     }
 };
-
-// void galaxy_type_check(hubble_type &galaxy_type) 
-// {
-//     do {
-//         std::cout << "Please enter the galaxy type: " << std::endl;
-//         std::cin >> galaxy_type;
-//         if (std::cin.fail() || std::cin.peek() != '\n') {
-//             std::cout << "Invalid galaxy type, please try again" << std::endl;
-//             std::cin.clear();
-//             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-//         } else {
-//             break;
-//         }
-//     } while (true);
-// }
-
-void total_mass_check(double &total_mass)
-{
-    do {
-        std::cout << "Please enter the total mass: " << std::endl;
-        std::cin >> total_mass;
-        if (total_mass < 7 || total_mass > 12 || std::cin.fail() || std::cin.peek() != '\n') {
-            std::cout << "Invalid total mass, please try again" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        } else {
-            break;
-        }
-    } while (true);
-}
-
-void stellar_mass_fraction_check(double &stellar_mass_fraction)
-{
-    do {
-        std::cout << "Please enter the stellar mass fraction: " << std::endl;
-        std::cin >> stellar_mass_fraction;
-        if (stellar_mass_fraction < 0 || stellar_mass_fraction > 0.05 || std::cin.fail() || std::cin.peek() != '\n') {
-            std::cout << "Invalid stellar mass fraction, please enter a value between [0, 0.05]" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        } else {
-            break;
-        }
-    } while (true);
-}
-
-void redshift_check(double &redshift)
-{
-    do {
-        std::cout << "Please enter the redshift: " << std::endl;
-        std::cin >> redshift;
-        if (redshift < 0 || redshift > 10 || std::cin.fail() || std::cin.peek() != '\n') {
-            std::cout << "Invalid redshift, please enter a value in the range [0, 10]" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        } else {
-            break;
-        }
-    } while (true);
-}
-
-void answer_check(char &answer)
-{
-    do {
-        std::cin >> answer;
-        if (answer != 'n' && answer != 'N' && answer != 'y' && answer != 'Y' || std::cin.fail() || std::cin.peek() != '\n') {
-            std::cout << "Invalid answer, please enter y/n" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        } else {
-            break;
-        }
-    } while (true);
-}
 
 int main() {
     hubble_type galaxy_type;
@@ -144,25 +115,14 @@ int main() {
     double stellar_mass_fraction;
     double redshift;
 
-    std::cout << "Would you like to input your own galaxy data? [y/n] \n (If no, then a random galaxy will be made) \n"\
-    << "Input: ";
-    char answer;
-    answer_check(answer);
-
-    if (answer == 'y' || answer == 'Y') {
-        // galaxy_type_check(galaxy_type);
-        total_mass_check(total_mass);
-        stellar_mass_fraction_check(stellar_mass_fraction);
-        redshift_check(redshift);
-    } else {
-        srand(time(0));
-        galaxy_type = static_cast<hubble_type>(rand() % 12);
-        total_mass = 7 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (12 - 7)));
-        stellar_mass_fraction = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (0.05 - 0)));
-        redshift = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (10 - 0)));
-    }
+    srand(time(0));
+    galaxy_type = static_cast<hubble_type>(rand() % 12);
+    total_mass = 7 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (12 - 7)));
+    stellar_mass_fraction = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (0.05 - 0)));
+    redshift = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (10 - 0)));
 
     Galaxy galaxy(galaxy_type, total_mass, stellar_mass_fraction, redshift);
+    galaxy.add_satellites();
     galaxy.print_stellar_mass();
     galaxy.print_galaxy_data();
 
