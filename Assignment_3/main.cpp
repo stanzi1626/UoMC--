@@ -26,20 +26,9 @@ std::ostream& operator<<(std::ostream& os, const hubble_type ht)
   return os;
 }
 
-void print_enum_galaxy_values()
+double random_double(double min, double max)
 {
-    std::cout << "E0: " << "0" << std::endl;
-    std::cout << "E3: " << "1" << std::endl;
-    std::cout << "E5: " << "2" << std::endl;
-    std::cout << "E7: " << "3" << std::endl;
-    std::cout << "S0: " << "4" << std::endl;
-    std::cout << "Sa: " << "5" << std::endl;
-    std::cout << "Sb: " << "6" << std::endl;
-    std::cout << "Sc: " << "7" << std::endl;
-    std::cout << "SBa: " << "8" << std::endl;
-    std::cout << "SBb: " << "9" << std::endl;
-    std::cout << "SBc: " << "10" << std::endl;
-    std::cout << "Irr: " << "11" << std::endl;
+    return min + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (max - min)));
 }
 
 class Galaxy {
@@ -51,10 +40,7 @@ private:
     std::vector<Galaxy> satellites;
 
 public:
-    Galaxy()
-    {
-        std::cout << "Galaxy()" << std::endl;
-    }
+    Galaxy() {}
 
     Galaxy(hubble_type galaxy_type, double total_mass, double stellar_mass_fraction, double redshift)
     : galaxy_type(galaxy_type), total_mass(total_mass), stellar_mass_fraction(stellar_mass_fraction), redshift(redshift)
@@ -67,16 +53,16 @@ public:
         std::cout << "Stellar mass: " << pow(10, total_mass) * stellar_mass_fraction << " solar masses" << std::endl;
     }
 
-    Galaxy create_random_galaxy(){
+    Galaxy create_random_satellite(){
         hubble_type galaxy_type;
         double total_mass;
         double stellar_mass_fraction;
         double redshift;
 
         galaxy_type = static_cast<hubble_type>(rand() % 12);
-        total_mass = 7 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (12 - 7)));
-        stellar_mass_fraction = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (0.05 - 0)));
-        redshift = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (10 - 0)));
+        total_mass = random_double(7, 12);
+        stellar_mass_fraction = random_double(0, 0.05);
+        redshift = random_double(0, 10);
 
         Galaxy galaxy(galaxy_type, total_mass, stellar_mass_fraction, redshift);
         return galaxy;
@@ -85,7 +71,24 @@ public:
     void add_satellites()
     {
         for (int i = 0; i < rand() % 10; i++) {
-            satellites.push_back(create_random_galaxy());
+            satellites.push_back(create_random_satellite());
+        }
+    }
+
+    void print_all_galaxies()
+    {
+        std::cout << "##########################" << std::endl;
+        std::cout << "Main Galaxy" << std::endl;
+        std::cout << "##########################" << std::endl;
+        print_stellar_mass();
+        print_galaxy_data();
+        if (satellites.size() != 0) {
+            std::cout << "##########################" << std::endl;
+            std::cout << "Satellites" << std::endl;
+            std::cout << "##########################" << std::endl;
+        }
+        for (auto itr = satellites.begin(); itr != satellites.end(); ++itr) {
+            itr -> print_galaxy_data();
         }
     }
 
@@ -96,11 +99,7 @@ public:
         std::cout << "Total mass: " << pow(10, total_mass) << " solar masses" << std::endl;
         std::cout << "Stellar mass fraction: " << stellar_mass_fraction << std::endl;
         std::cout << "Redshift: " << redshift << std::endl << std::endl;
-
         std::cout << "Number of satellites: " << satellites.size() << std::endl;
-        for (auto itr = satellites.begin(); itr != satellites.end(); ++itr) {
-            itr -> print_galaxy_data();
-        }
     }
 
     void change_galaxy_type(hubble_type galaxy_type)
@@ -117,13 +116,17 @@ int main() {
 
     srand(time(0));
     galaxy_type = static_cast<hubble_type>(rand() % 12);
-    total_mass = 7 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (12 - 7)));
-    stellar_mass_fraction = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (0.05 - 0)));
-    redshift = static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (10 - 0)));
+    total_mass = random_double(7, 12);
+    stellar_mass_fraction = random_double(0, 0.05);
+    redshift = random_double(0, 10);
 
     Galaxy galaxy(galaxy_type, total_mass, stellar_mass_fraction, redshift);
     galaxy.add_satellites();
-    galaxy.print_stellar_mass();
+    galaxy.print_all_galaxies();
+
+    std::cout << std::endl << "##########################" << std::endl;
+    std::cout << "Changing main galaxy type to E0" << std::endl;
+    galaxy.change_galaxy_type(hubble_type::E0);
     galaxy.print_galaxy_data();
 
     return 0;
