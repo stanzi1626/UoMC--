@@ -2,7 +2,11 @@
 
 #include "complex_number_class.h"
 
-void print_divider() {
+void print_divider()
+{
+/**
+ * @brief This function prints a divider to separate the output of the program
+ */
     std::cout << "--------------------------" << std::endl;
 }
 
@@ -27,8 +31,33 @@ void answer_check(char &answer)
     } while (true);
 }
 
+void complex_number_check(ComplexNumber &complex_number)
+{
+/**
+ * @brief This function checks if the complex number entered by the user is valid
+ * @param complex_number
+ */
+    do {
+        std::cin >> complex_number;
+
+        if (std::cin.fail()) {
+            std::cout << "Please enter a valid complex number." << std::endl;
+            std::cout << "Complex Number: ";
+            std::cin.clear();
+            std::cin.ignore(256, '\n');
+            continue;
+        } else {
+            break;
+        }
+    } while (true);
+}
+
 int main()
 {
+/**
+ * @brief This is the main function of the program that creates two complex numbers and performs
+ * some operations on them, then asks the user if they want to input their own complex number
+ */
     ComplexNumber complex_number_1(3, 4);
 
     print_divider();
@@ -67,12 +96,9 @@ int main()
     char input;
     answer_check(input);
     if (input == 'y') {
-        double real, imaginary;
-        std::cout << "Enter the real part: ";
-        std::cin >> real;
-        std::cout << "Enter the imaginary part: ";
-        std::cin >> imaginary;
-        ComplexNumber complex_number_4(real, imaginary);
+        ComplexNumber complex_number_4;
+        std::cout << "Please input your complex number: ";
+        complex_number_check(complex_number_4);
         print_divider();
         std::cout << "User's Complex Number: " << complex_number_4 << std::endl << std::endl;
         std::cout << "Real: " << complex_number_4.getReal() << std::endl;
