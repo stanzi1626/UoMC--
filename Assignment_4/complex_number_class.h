@@ -9,8 +9,8 @@ private:
 public:
     ComplexNumber();
     ComplexNumber(double real, double imaginary);
-    double getReal() const;
-    double getImaginary() const;
+    double get_real() const;
+    double get_imaginary() const;
     ComplexNumber complex_conjugate() const;
     double modulus() const;
     double argument() const;

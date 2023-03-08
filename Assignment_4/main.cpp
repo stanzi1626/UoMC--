@@ -62,8 +62,8 @@ int main()
 
     print_divider();
     std::cout << "Complex Number 1: " << complex_number_1 << std::endl << std::endl;
-    std::cout << "Real: " << complex_number_1.getReal() << std::endl;
-    std::cout << "Imaginary: " << complex_number_1.getImaginary() << std::endl;
+    std::cout << "Real: " << complex_number_1.get_real() << std::endl;
+    std::cout << "Imaginary: " << complex_number_1.get_imaginary() << std::endl;
     std::cout << "Modulus: " << complex_number_1.modulus() << std::endl;
     std::cout << "Argument: " << complex_number_1.argument() << std::endl;
     std::cout << "Complex Conjugate: " << complex_number_1.complex_conjugate() << std::endl;
@@ -72,8 +72,8 @@ int main()
     ComplexNumber complex_number_2(1, -2);
     print_divider();
     std::cout << "Complex Number 2: " << complex_number_2 << std::endl << std::endl;
-    std::cout << "Real: " << complex_number_2.getReal() << std::endl;
-    std::cout << "Imaginary: " << complex_number_2.getImaginary() << std::endl;
+    std::cout << "Real: " << complex_number_2.get_real() << std::endl;
+    std::cout << "Imaginary: " << complex_number_2.get_imaginary() << std::endl;
     std::cout << "Modulus: " << complex_number_2.modulus() << std::endl;
     std::cout << "Argument: " << complex_number_2.argument() << std::endl;
     std::cout << "Complex Conjugate: " << complex_number_2.complex_conjugate() << std::endl;
@@ -102,8 +102,8 @@ int main()
         complex_number_check(complex_number_4);
         print_divider();
         std::cout << "User's Complex Number: " << complex_number_4 << std::endl << std::endl;
-        std::cout << "Real: " << complex_number_4.getReal() << std::endl;
-        std::cout << "Imaginary: " << complex_number_4.getImaginary() << std::endl;
+        std::cout << "Real: " << complex_number_4.get_real() << std::endl;
+        std::cout << "Imaginary: " << complex_number_4.get_imaginary() << std::endl;
         std::cout << "Modulus: " << complex_number_4.modulus() << std::endl;
         std::cout << "Argument: " << complex_number_4.argument() << std::endl;
         std::cout << "Complex Conjugate: " << complex_number_4.complex_conjugate() << std::endl;

@@ -10,12 +10,12 @@ ComplexNumber::ComplexNumber(double real, double imaginary)
     this->imaginary = imaginary;
 }
 
-double ComplexNumber::getReal() const
+double ComplexNumber::get_real() const
 {
     return real;
 }
 
-double ComplexNumber::getImaginary() const
+double ComplexNumber::get_imaginary() const
 {
     return imaginary;
 }
