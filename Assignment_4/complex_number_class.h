@@ -11,8 +11,6 @@ public:
     ComplexNumber(double real, double imaginary);
     double getReal() const;
     double getImaginary() const;
-    void setReal(double real);
-    void setImaginary(double imaginary);
     ComplexNumber complex_conjugate() const;
     double modulus() const;
     double argument() const;

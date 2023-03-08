@@ -20,16 +20,6 @@ double ComplexNumber::getImaginary() const
     return imaginary;
 }
 
-void ComplexNumber::setReal(double real)
-{
-    this->real = real;
-}
-
-void ComplexNumber::setImaginary(double imaginary)
-{
-    this->imaginary = imaginary;
-}
-
 ComplexNumber ComplexNumber::complex_conjugate() const
 {
     return ComplexNumber(real, -imaginary);
@@ -70,18 +60,28 @@ ComplexNumber ComplexNumber::operator/(const ComplexNumber& other_complex_number
 
 std::ostream& operator<<(std::ostream& os, const ComplexNumber& complex_number)
 {
-    if (complex_number.imaginary < 0) {
-        return os << complex_number.real << " - " << -complex_number.imaginary << "i";
-    } else if (complex_number.imaginary == 0) {
+/**
+ * @brief This function is used to print out the complex number in the form of a + bi with edge cases
+ * @param os, complex_number
+ */
+    if (complex_number.imaginary == 0) {
         return os << complex_number.real;
     } else if (complex_number.real == 0) {
-        return os << complex_number.imaginary << "i";
+        if (complex_number.imaginary == 1) {
+            return os << "i";
+        } else if (complex_number.imaginary == -1) {
+            return os << "-i";
+        } else {
+            return os << complex_number.imaginary << "i";
+        }
     } else if (complex_number.real == 0 && complex_number.imaginary == 0) {
         return os << 0;
     } else if (complex_number.imaginary == 1) {
         return os << complex_number.real << " + i";
     } else if (complex_number.imaginary == -1) {
         return os << complex_number.real << " - i";
+    } else if (complex_number.imaginary < 0) {
+        return os << complex_number.real << " - " << -complex_number.imaginary << "i";
     } else {
         return os << complex_number.real << " + " << complex_number.imaginary << "i";
     }
@@ -89,9 +89,29 @@ std::ostream& operator<<(std::ostream& os, const ComplexNumber& complex_number)
 
 bool ComplexNumber::break_down_complex_number(std::istream& input, double& real_input, double& imaginary_input)
 {
+/**
+ * @brief This function is used to break down the user's complex number into real and imaginary parts and return true if the input is valid
+ * with edge cases
+ * @param input, real_input, imaginary_input
+ */
     char filter;
     double temp;
     char next;
+
+    if (input >> filter && filter == 'i' && std::cin.peek() == '\n') {
+        real_input = 0.0;
+        imaginary_input = 1.0;
+        return true;
+    }
+    std::cin.unget();
+    if (input >> filter && filter == '-') {
+        if (input >> filter && filter == 'i' && std::cin.peek() == '\n') {
+            real_input = 0.0;
+            imaginary_input = -1.0;
+            return true;
+        }
+    }
+    std::cin.unget();
     if (input >> temp) {
         next = input.peek();
         if (next != 'i') {
@@ -100,7 +120,17 @@ bool ComplexNumber::break_down_complex_number(std::istream& input, double& real_
                 input >> next;
             }
             if (next == '+' || next == '-') {
-                if (input >> imaginary_input >> filter  && filter == 'i') {
+                if (input >> filter && filter == 'i' && std::cin.peek() == '\n') {
+                    if (next == '-') {
+                        imaginary_input = -1.0;
+                        return true;
+                    } else {
+                        imaginary_input = 1.0;
+                        return true;
+                    }
+                }
+                std::cin.unget();
+                if (input >> imaginary_input >> filter  && filter == 'i' && std::cin.peek() == '\n') {
                     if (next == '-' && imaginary_input > 0) {
                         imaginary_input = -imaginary_input;
                         return true;
@@ -112,9 +142,11 @@ bool ComplexNumber::break_down_complex_number(std::istream& input, double& real_
                 return true;
             }
         } else {
-            imaginary_input = temp;
-            input >> filter;
-            return true;
+            if (input >> filter && filter == 'i' && std::cin.peek() == '\n') {
+                real_input = 0.0;
+                imaginary_input = temp;
+                return true;
+            }
         }
     }
     return false;
@@ -122,6 +154,10 @@ bool ComplexNumber::break_down_complex_number(std::istream& input, double& real_
 
 std::istream& operator>>(std::istream& input, ComplexNumber& complex_number)
 {
+/**
+ * @brief This function overloads the >> operator to take in the user's complex number and returns the input true if it is valid
+ * 
+ */
     double real = 0.0;
     double imag = 0.0;
 

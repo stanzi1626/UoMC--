@@ -69,7 +69,6 @@ int main()
     std::cout << "Complex Conjugate: " << complex_number_1.complex_conjugate() << std::endl;
     print_divider();
 
-
     ComplexNumber complex_number_2(1, -2);
     print_divider();
     std::cout << "Complex Number 2: " << complex_number_2 << std::endl << std::endl;
@@ -97,7 +96,9 @@ int main()
     answer_check(input);
     if (input == 'y') {
         ComplexNumber complex_number_4;
-        std::cout << "Please input your complex number: ";
+        std::cout << "Please input your complex number of the form a+bi or a + bi, where a and b are real numbers." << std::endl;
+        std::cout << "(Note: Can also not input b if b = 1, i.e. 1 + i is a valid input)" << std::endl;
+        std::cout << "Complex Number: ";
         complex_number_check(complex_number_4);
         print_divider();
         std::cout << "User's Complex Number: " << complex_number_4 << std::endl << std::endl;
