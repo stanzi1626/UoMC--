@@ -15,12 +15,12 @@ public:
     Matrix();
     // Parameterized constructor
     Matrix(int m, int n);
-    // Copy constructor
-
+    // Copy constructor 
+    Matrix(const Matrix &mat);
     // Move constructor
-
+    Matrix(Matrix &&mat);
     // Destructor
-
+    ~Matrix();
     // Access functions
     int get_rows() const;
     int get_cols() const;
@@ -30,9 +30,9 @@ public:
 
     // Other functions 
     // Copy  Assignment operator
-
+    Matrix & operator=(const Matrix &mat);
     // Move Assignment operator
-
+    Matrix & operator=(Matrix &&mat);
     // Addition, subtraction and multiplication
 
     // minor
