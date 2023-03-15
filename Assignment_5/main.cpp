@@ -1,82 +1,110 @@
-// PHYS 30762 Programming in C++
-// Assignment 5 - A Matrix class
-// Created by Alexander Stansfield 15/03/2023
+//  PHYS 30762 Programming in C++
+//  Assignment 5 - A Matrix class
+//  Created by Alexander Stansfield 15/03/2023
+
+//  Look at preamble.h for description of programme
 
 #include<iostream>
-// #include<stdlib> // for c style exit
 #include "Matrix_class.h"
+
+void print_divider()
+{
+/**
+ * @brief This function prints a divider to the console
+ * 
+ */
+    std::cout << "========================================" << std::endl;
+}
+
+void answer_check(char &answer)
+{
+/**
+ * @brief This function checks if the answer entered by the user is valid, has to be either 'y' or 'n'
+ * @param answer
+ */
+  do {
+      std::cin >> answer;
+
+      if (answer != 'y' && answer != 'n' || std::cin.fail() || std::cin.peek() != '\n') {
+            std::cout << "Please enter a valid option." << std::endl;
+            std::cout << "Answer: ";
+            std::cin.clear();
+            std::cin.ignore(256, '\n');
+            continue;
+      } else break;
+  } while (true);
+}
+
+void user_option(Matrix &matrixA)
+{
+/**
+ * @brief This function asks the user if they would like to input their own matrix for matrixA
+ * @param matrixA
+ */
+    std::cout << "Would you like to input your own matrix for matrixA? (y/n)" << std::endl;
+    std::cout << "Answer: ";
+    char answer;
+    answer_check(answer);
+    if (answer == 'y') {
+        std::cout << "Please enter the values for matrixA: " << std::endl;
+        std::cin >> matrixA;
+    } else {
+        std::cout << "Using default values for matrixA" << std::endl;
+        matrixA = Matrix{3, 3};
+        matrixA(1,1)=1;
+        matrixA(1,2)=2;
+        matrixA(1,3)=3;
+        matrixA(2,1)=9;
+        matrixA(2,2)=8;
+        matrixA(2,3)=7;
+        matrixA(3,1)=4;
+        matrixA(3,2)=2;
+        matrixA(3,3)=6;
+    }
+}
 
 int main()
 {
-    // Demonstrate default constructor
-    Matrix a1;
-    std::cout << a1;
+    Matrix matrixA;
+    Matrix matrixB{3, 3};
+    Matrix matrixC{2, 3};
 
-    // Parameterized constructor
-    const int m{2};
-    const int n{2};
-    Matrix a2{m,n};
-    // Set values for a2 here
-    a2(1,1)=1;
-    a2(1,2)=2;
-    a2(2,1)=3;
-    a2(2,2)=4;
+    user_option(matrixA);
 
-    // Print Matrix a2
-    // std::cout << a2;
+    // Set values for matrixB here
+    matrixB(1,1)=5;
+    matrixB(1,2)=5;
+    matrixB(1,3)=4;
+    matrixB(2,1)=1;
+    matrixB(2,2)=2;
+    matrixB(2,3)=3;
+    matrixB(3,1)=6;
+    matrixB(3,2)=9;
+    matrixB(3,3)=8;
 
+    // Set values for matrixC here
+    matrixC(1,1)=3;
+    matrixC(1,2)=4;
+    matrixC(1,3)=1;
+    matrixC(2,1)=2;
+    matrixC(2,2)=5;
+    matrixC(2,3)=6;
 
-    // Deep copy by assignment: define new Matrix a3 then copy from a2 to a3
-    // Matrix a3{m,n};
-    // std::cout << a3;
-    // a3 = a2;
-    // std::cout << a3;
-    // // Modify contents of original Matrix and show assigned Matrix is unchanged here
-
-    // a2(1,1)=5;
-    // a2(1,2)=6;
-    // a2(2,1)=7;
-    // a2(2,2)=8;
-
-    // std::cout << a2;
-    // std::cout << a3;
- 
-
-    // Deep copy using copy constructor 
-    Matrix a4{a2};
-    // std::cout<<a4;
-    // Modify contents of original Matrix and show copied Matrix is unchanged here
-
-    a2(1,1)=5;
-    a2(1,2)=6;
-    a2(2,1)=7;
-    a2(2,2)=8;
-
-    // std::cout<<a2;
-    // std::cout<<a4;
-
-    // Move copy construction demonstration
-    Matrix a5(std::move(a2));
-    std::cout << a5;
-    std::cout << a2;
-    // Move assignment demonstration
-    Matrix a6;
-    a6 = std::move(a5);
-    std::cout << a6;
-    std::cout << a5;
-    //
-    // Second part of assignment: Matrix operations
-    //
-
+    // Print matrices
+    std::cout << matrixA << std::endl;
+    std::cout << matrixB << std::endl;
+    std::cout << matrixC << std::endl;
     // Addition of 2 matrices
-
+    std::cout << matrixA + matrixB << std::endl;
     // Subtraction of 2 matrices
-
+    std::cout << matrixA - matrixB << std::endl;
     // Multiplication of 2 matrices
-
-
+    std::cout << matrixA * matrixB << std::endl;
+    // std::cout << matrixA * matrixC << std::endl;
     // Determinant
+    std::cout << matrixA.determinant() << std::endl;
+    std::cout << matrixB.determinant() << std::endl;
+    std::cout << matrixC.determinant() << std::endl;
 
-  
-  return 0;
+    return 0;
 }

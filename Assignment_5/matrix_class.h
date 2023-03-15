@@ -6,10 +6,11 @@ class Matrix
 {
     // Friends
     friend std::ostream & operator<<(std::ostream &os, const Matrix &mat);
+    friend std::istream & operator>>(std::istream &is, Matrix &mat);
 private:
-    double *matrix_data {nullptr};
-    int rows{0};
-    int columns{0};
+    double *matrix_data{nullptr};
+    int rows{1};
+    int columns{1};
 public:
     // Default constructor
     Matrix();
@@ -26,17 +27,16 @@ public:
     int get_cols() const;
     int index(int m, int n) const;
     double & operator()(int m, int n) const;
-    // Other access functions go here
 
-    // Other functions 
-    // Copy  Assignment operator
+    // Assignment operators
     Matrix & operator=(const Matrix &mat);
-    // Move Assignment operator
     Matrix & operator=(Matrix &&mat);
-    // Addition, subtraction and multiplication
-
-    // minor
-
-    // determinant
-
+    //  Arithmetic operators
+    Matrix operator+(const Matrix &mat) const;
+    Matrix operator-(const Matrix &mat) const;
+    Matrix operator*(const Matrix &mat) const;
+    // Submatrix with row m and column n removed
+    Matrix remove_row_column(int m, int n) const;
+    // Determinant
+    double determinant() const;
 };
