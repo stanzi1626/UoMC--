@@ -57,42 +57,55 @@ std::ostream & operator<<(std::ostream &os, const Matrix &mat)
 
 bool break_down_matrix(std::istream &is, Matrix &mat, std::vector<double> &data)
 {
-    char input;
+    char character;
+    double number;
+    bool first_row{true};
     int rows{0};
     int columns{0};
-    int i{1};
     int j{1};
     while (is) {
-        if (is >> input && input == '[') {
+        // Check if input starts with '[' (always indicates new row)
+        if (is >> character && character == '[') {
             ++rows;
-            ++columns;
+            if (first_row == true) ++columns;
         }
-        else if (input == ',') ++columns;
-        else if (input == ']') {
+        // Check if input is a comma (always indicates new column) and if it is the first row (if first row, then increment columns)
+        else if (character == ',' & first_row == false) ++j;
+        else if (character == ',' & first_row == true) ++j && ++columns;
+        // Check if input is a ']' (always indicates end of row)
+        else if (character == ']') {
             if (j != columns) {
                 std::cout << "Error: input error" << std::endl;
                 exit(1);
             }
+            // Check if input is a ']' and if it is the last row (if last row, then break)
+            else if (j == columns && std::cin.peek() == '\n') break;
+            // Reset column counter and set first_row to false
             j = 1;
+            first_row = false;
+            continue;
+        }
+        // Check if input is a number
+        if (is >> number) data.push_back(number);
+        // If input is not a number, then input is invalid and program exits
+        if (std::cin.fail()) {
+            std::cout << "Error: input error" << std::endl;
+            exit(1);
         }
     }
-    if (input != ']') {
-        std::cout << "Error: input error" << std::endl;
-        exit(1);
-    }
+    // If input is valid, then set matrix dimensions and allocate memory
     mat = Matrix(rows, columns);
     return true;
 }
 
 
-std::istream & operator>>(std::istream &is, Matrix &mat, std::vector<double> &data)
+std::istream & operator>>(std::istream &is, Matrix &mat)
 {
     std::vector<double> data;
-    if (break_down_matrix(is, mat)) {
-        std::
+    if (break_down_matrix(is, mat, data)) {
         for(int i{1}; i<=mat.rows; ++i) {
             for(int j{1}; j<=mat.columns; ++j) {
-                is >> mat.matrix_data[mat.index(i,j)];
+                mat.matrix_data[mat.index(i,j)] = data[mat.index(i,j)];
             }
         }
     }
