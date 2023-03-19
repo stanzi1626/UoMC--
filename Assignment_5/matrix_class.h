@@ -16,6 +16,8 @@ public:
     Matrix();
     // Parameterized constructor
     Matrix(int m, int n);
+    // Parameterized constructor with data
+    Matrix(int m, int n, double *data);
     // Copy constructor 
     Matrix(const Matrix &mat);
     // Move constructor

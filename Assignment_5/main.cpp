@@ -10,16 +10,16 @@
 void print_divider()
 {
 /**
- * @brief This function prints a divider to the console
+ * @brief Prints a divider to the console
  * 
  */
-    std::cout << "========================================" << std::endl;
+    std::cout << "========================================" << std::endl << std::endl;
 }
 
 void answer_check(char &answer)
 {
 /**
- * @brief This function checks if the answer entered by the user is valid, has to be either 'y' or 'n'
+ * @brief Checks if the answer entered by the user is valid, has to be either 'y' or 'n'
  * @param answer
  */
   do {
@@ -38,7 +38,7 @@ void answer_check(char &answer)
 void user_option(Matrix &matrixA)
 {
 /**
- * @brief This function asks the user if they would like to input their own matrix for matrixA
+ * @brief Asks the user if they would like to input their own matrix for matrixA
  * @param matrixA
  */
     std::cout << "Would you like to input your own matrix for matrixA? (y/n)" << std::endl;
@@ -46,65 +46,86 @@ void user_option(Matrix &matrixA)
     char answer;
     answer_check(answer);
     if (answer == 'y') {
-        std::cout << "Please enter the values for matrixA: " << std::endl;
-        std::cin >> matrixA;
+        std::cout << "Please enter the values in the following format: [a, b, ...][c, d, ...][...]" << std::endl;
+        std::cout << "where the number of elements in each square brackets (i.e. # of columns) is the same" << std::endl << std::endl;
+        std::cout << "Please enter the values for matrixA: ";
+        Matrix temp_matrix;
+        std::cin >> temp_matrix;
+        matrixA = temp_matrix;
+        temp_matrix.~Matrix();
+        std::cout << "Matrix is valid" << std::endl;
+        print_divider();
     } else {
         std::cout << "Using default values for matrixA" << std::endl;
-        matrixA = Matrix{3, 3};
-        matrixA(1,1)=1;
-        matrixA(1,2)=2;
-        matrixA(1,3)=3;
-        matrixA(2,1)=9;
-        matrixA(2,2)=8;
-        matrixA(2,3)=7;
-        matrixA(3,1)=4;
-        matrixA(3,2)=2;
-        matrixA(3,3)=6;
+        print_divider();
+        // Set values for matrixA
+        double matrixA_data[9] = {1, 2, 3, 9, 8, 7, 4, 5, 6};
+        matrixA = Matrix{3, 3, matrixA_data};
     }
 }
 
 int main()
 {
-    Matrix matrixA;
-    Matrix matrixB{3, 3};
-    Matrix matrixC{2, 3};
+/**
+ * @brief Main function, read preamble.h for description of programme
+ * 
+ */
+    // Set values for matrixA
+    double matrixA_data[9] = {1, 2, 3, 9, 8, 7, 4, 5, 6};
+    Matrix matrixA{3, 3, matrixA_data};
 
-    user_option(matrixA);
+    // Set values for matrixB
+    double matrixB_data[9] = {5, 5, 4, 1, 2, 3, 6, 9, 8};
+    Matrix matrixB{3, 3, matrixB_data};
 
-    // Set values for matrixB here
-    matrixB(1,1)=5;
-    matrixB(1,2)=5;
-    matrixB(1,3)=4;
-    matrixB(2,1)=1;
-    matrixB(2,2)=2;
-    matrixB(2,3)=3;
-    matrixB(3,1)=6;
-    matrixB(3,2)=9;
-    matrixB(3,3)=8;
-
-    // Set values for matrixC here
-    matrixC(1,1)=3;
-    matrixC(1,2)=4;
-    matrixC(1,3)=1;
-    matrixC(2,1)=2;
-    matrixC(2,2)=5;
-    matrixC(2,3)=6;
+    // Set values for matrixC
+    double matrixC_data[6] = {1, 2, 3, 4, 5, 6};
+    Matrix matrixC{2, 3, matrixC_data};
 
     // Print matrices
+    std::cout<< "Printing matrices" << std::endl;
+    std::cout << "Matrix A: " << std::endl;
     std::cout << matrixA << std::endl;
+    std::cout << "Matrix B: " << std::endl;
     std::cout << matrixB << std::endl;
+    std::cout << "Matrix C: " << std::endl;
     std::cout << matrixC << std::endl;
+    print_divider();
+
     // Addition of 2 matrices
+    std::cout << "Adding matrixA and matrixB:" << std::endl;
     std::cout << matrixA + matrixB << std::endl;
+    print_divider();
+
     // Subtraction of 2 matrices
+    std::cout << "Subtracting matrixA and matrixB:" << std::endl;
     std::cout << matrixA - matrixB << std::endl;
+    print_divider();
+
     // Multiplication of 2 matrices
-    std::cout << matrixA * matrixB << std::endl;
+    std::cout << "Multiplying matrixA and matrixB:" << std::endl;
+    std::cout << matrixA * matrixB << std::endl << std::endl;
+
+    // If using default values for matrixA, this will not work. Uncomment to test
+    // std::cout << "Multiplying matrixA and matrixC:" << std::endl;
     // std::cout << matrixA * matrixC << std::endl;
+    print_divider();
+
+    // User input for matrixA
+    user_option(matrixA);
+    print_divider();
+
     // Determinant
+    std::cout << "Determinant of matrixA: ";
     std::cout << matrixA.determinant() << std::endl;
+    std::cout << "Determinant of matrixB: ";
     std::cout << matrixB.determinant() << std::endl;
-    std::cout << matrixC.determinant() << std::endl;
+    // std::cout << "Determinant of matrixC: ";
+    // std::cout << matrixC.determinant() << std::endl;
+    print_divider();
+
+    // Copy matrixA into matrixD, mani
+
 
     return 0;
 }
