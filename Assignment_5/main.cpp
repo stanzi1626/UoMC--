@@ -54,10 +54,8 @@ void user_option(Matrix &matrixA)
         matrixA = temp_matrix;
         temp_matrix.~Matrix();
         std::cout << "Matrix is valid" << std::endl;
-        print_divider();
     } else {
         std::cout << "Using default values for matrixA" << std::endl;
-        print_divider();
         // Set values for matrixA
         double matrixA_data[9] = {1, 2, 3, 9, 8, 7, 4, 5, 6};
         matrixA = Matrix{3, 3, matrixA_data};
@@ -83,7 +81,7 @@ int main()
     Matrix matrixC{2, 3, matrixC_data};
 
     // Print matrices
-    std::cout<< "Printing matrices" << std::endl;
+    std::cout<< "Printing matrices test matrices:" << std::endl;
     std::cout << "Matrix A: " << std::endl;
     std::cout << matrixA << std::endl;
     std::cout << "Matrix B: " << std::endl;
@@ -93,39 +91,70 @@ int main()
     print_divider();
 
     // Addition of 2 matrices
-    std::cout << "Adding matrixA and matrixB:" << std::endl;
+    std::cout << "Adding Matrix A and matrix B -> A + B:" << std::endl;
     std::cout << matrixA + matrixB << std::endl;
     print_divider();
 
     // Subtraction of 2 matrices
-    std::cout << "Subtracting matrixA and matrixB:" << std::endl;
+    std::cout << "Subtracting matrix A and matric B -> A - B:" << std::endl;
     std::cout << matrixA - matrixB << std::endl;
     print_divider();
 
     // Multiplication of 2 matrices
-    std::cout << "Multiplying matrixA and matrixB:" << std::endl;
-    std::cout << matrixA * matrixB << std::endl << std::endl;
+    std::cout << "Multiplying matrix A and matrix B -> A * B:" << std::endl;
+    std::cout << matrixA * matrixB << std::endl;
 
     // If using default values for matrixA, this will not work. Uncomment to test
-    // std::cout << "Multiplying matrixA and matrixC:" << std::endl;
+    // std::cout << "Multiplying matrix A and matrix C -> A * C:" << std::endl;
     // std::cout << matrixA * matrixC << std::endl;
+    print_divider();
+
+    // Determinant
+    std::cout << "Determinant of matrix A -> det(A): ";
+    std::cout << matrixA.determinant() << std::endl;
+    std::cout << "Determinant of matrix B -> det(B): ";
+    std::cout << matrixB.determinant() << std::endl << std::endl;
+    // std::cout << "Determinant of matrix C -> det(C): ";
+    // std::cout << matrixC.determinant() << std::endl;
+    print_divider();
     print_divider();
 
     // User input for matrixA
     user_option(matrixA);
     print_divider();
-
-    // Determinant
-    std::cout << "Determinant of matrixA: ";
-    std::cout << matrixA.determinant() << std::endl;
-    std::cout << "Determinant of matrixB: ";
-    std::cout << matrixB.determinant() << std::endl;
-    // std::cout << "Determinant of matrixC: ";
-    // std::cout << matrixC.determinant() << std::endl;
     print_divider();
 
-    // Copy matrixA into matrixD, mani
+    // Copy matrixA into matrixD, manipulate matrixA and print both matrices
+    std::cout << "Shall now demonstrate the copying and moving of matrices." << std::endl;
+    std::cout << "Copying matrixA into matrixD -> D = A" << std::endl;
+    Matrix matrixD = matrixA;
 
+    std::cout << "Matrix A: " << std::endl;
+    std::cout << matrixA << std::endl;
+    std::cout << "Matrix D: " << std::endl;
+    std::cout << matrixD << std::endl;
+
+    print_divider();
+
+    std::cout << "Changing the value of matrixA[1][1] to 10 to show deep copy Matrix D is unaffected -> D != A" << std::endl;
+    matrixA(1, 1) = 10;
+
+    std::cout << "Matrix A: " << std::endl;
+    std::cout << matrixA << std::endl;
+    std::cout << "Matrix D: " << std::endl;
+    std::cout << matrixD << std::endl;
+
+    print_divider();
+
+    std::cout << "Moving matrixA into matrixE -> E = A & A = 0" << std::endl;
+    Matrix matrixE(std::move(matrixA));
+
+    std::cout << "Matrix A: " << std::endl;
+    std::cout << matrixA << std::endl;
+    std::cout << "Matrix E: " << std::endl;
+    std::cout << matrixE << std::endl;
+
+    print_divider();
 
     return 0;
 }

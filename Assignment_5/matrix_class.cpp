@@ -3,10 +3,7 @@
 #include <cmath>
 #include <vector>
 
-Matrix::Matrix() : rows{1}, columns{1}
-{
-    matrix_data = new double[1];
-}
+Matrix::Matrix() {}
 
 Matrix::Matrix(int m, int n) : rows{m}, columns{n}
 {
