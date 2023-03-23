@@ -249,7 +249,7 @@ Matrix Matrix::operator*(const Matrix &mat) const
         std::cout << "Error: matrices must have compatible dimensions" << std::endl;
         std::cout << "No. current matrix columns = " << columns << std::endl;
         std::cout << "No. mat matrix rows = " << mat.rows << std::endl;
-        exit(1);
+        return *this;
     }
     Matrix result(rows, mat.columns);
     for(int i{1}; i<=rows; ++i) {
@@ -299,8 +299,8 @@ double Matrix::determinant() const
  * 
  */
     if (rows != columns) {
-        std::cout << "Error: matrix must be square" << std::endl;
-        exit(1);
+        std::cout << "Error: matrix must be square: ERROR ";
+        return 0;
     }
     if (rows==1) return matrix_data[0];
     if (rows==2) return matrix_data[0]*matrix_data[3] - matrix_data[1]*matrix_data[2];

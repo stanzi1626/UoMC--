@@ -104,6 +104,12 @@ int main()
     std::cout << "Multiplying matrix A and matrix B -> A * B:" << std::endl;
     std::cout << matrixA * matrixB << std::endl;
 
+    std::cout << "Multiplying matrix C and matrix B -> C * B:" << std::endl;
+    std::cout << matrixC * matrixB << std::endl;
+
+    std::cout << "Multiplying matrix B and matrix C -> B * C:" << std::endl;
+    std::cout << matrixB * matrixC << std::endl;
+
     // If using default values for matrixA, this will not work. Uncomment to test
     // std::cout << "Multiplying matrix A and matrix C -> A * C:" << std::endl;
     // std::cout << matrixA * matrixC << std::endl;
@@ -114,8 +120,8 @@ int main()
     std::cout << matrixA.determinant() << std::endl;
     std::cout << "Determinant of matrix B -> det(B): ";
     std::cout << matrixB.determinant() << std::endl << std::endl;
-    // std::cout << "Determinant of matrix C -> det(C): ";
-    // std::cout << matrixC.determinant() << std::endl;
+    std::cout << "Determinant of matrix C -> det(C): ";
+    std::cout << matrixC.determinant() << std::endl;
     print_divider();
     print_divider();
 
@@ -146,7 +152,7 @@ int main()
 
     print_divider();
 
-    std::cout << "Moving matrixA into matrixE -> E = A & A = 0" << std::endl;
+    std::cout << "Moving matrixA into matrixE -> E = A & A => empty matrix" << std::endl;
     Matrix matrixE(std::move(matrixA));
 
     std::cout << "Matrix A: " << std::endl;
