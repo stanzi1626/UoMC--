@@ -101,7 +101,7 @@ bool break_down_matrix(std::istream &is, Matrix &mat, std::vector<double> &data)
         else if (character == ']') {
             if (j != columns) {
                 std::cout << "Error: input error" << std::endl;
-                exit(1);
+                return false;
             }
             // Check if input is a ']' and if it is the last row (if last row, then break)
             else if (j == columns && std::cin.peek() == '\n') break;
@@ -115,7 +115,7 @@ bool break_down_matrix(std::istream &is, Matrix &mat, std::vector<double> &data)
         // If input is not a number, then input is invalid and program exits
         if (std::cin.fail()) {
             std::cout << "Error: input error" << std::endl;
-            exit(1);
+            return false;
         }
     }
     // If input is valid, then set matrix dimensions and allocate memory
@@ -206,7 +206,7 @@ Matrix Matrix::operator+(const Matrix &mat) const
  */
     if (rows != mat.rows || columns != mat.columns) {
         std::cout << "Error: matrices must have the same dimensions" << std::endl;
-        exit(1);
+        return Matrix{};
     }
     Matrix result(rows, columns);
     for(int i{1}; i<=rows; ++i) {
@@ -226,7 +226,7 @@ Matrix Matrix::operator-(const Matrix &mat) const
  */
     if (rows != mat.rows || columns != mat.columns) {
         std::cout << "Error: matrices must have the same dimensions" << std::endl;
-        exit(1);
+        return Matrix{};
     }
     Matrix result(rows, columns);
     for(int i{1}; i<=rows; ++i) {
@@ -249,7 +249,7 @@ Matrix Matrix::operator*(const Matrix &mat) const
         std::cout << "Error: matrices must have compatible dimensions" << std::endl;
         std::cout << "No. current matrix columns = " << columns << std::endl;
         std::cout << "No. mat matrix rows = " << mat.rows << std::endl;
-        return *this;
+        return Matrix{};
     }
     Matrix result(rows, mat.columns);
     for(int i{1}; i<=rows; ++i) {
@@ -273,11 +273,11 @@ Matrix Matrix::remove_row_column(int n, int m) const
  */
     if (n>rows || m>columns) {
         std::cout << "Error: out of range" << std::endl;
-        exit(1);
+        return Matrix{};
     }
     if (rows==1 || columns==1) {
         std::cout << "Error: matrix must have at least 2 rows and 2 columns" << std::endl;
-        exit(1);
+        return Matrix{};
     }
     Matrix result(rows-1, columns-1);
     for(int i{1}; i<=rows; ++i) {
@@ -299,7 +299,7 @@ double Matrix::determinant() const
  * 
  */
     if (rows != columns) {
-        std::cout << "Error: matrix must be square: ERROR ";
+        std::cout << "Error: matrix must be square -> returning ";
         return 0;
     }
     if (rows==1) return matrix_data[0];
