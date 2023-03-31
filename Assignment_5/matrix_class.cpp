@@ -60,6 +60,7 @@ std::ostream & operator<<(std::ostream &os, const Matrix &mat)
 /**
  * @brief Overloaded << operator for the Matrix class, prints matrix in the form [a, b, ...] \\ [c, d, ...] \\ ...
  * @param os, mat
+ * @return std::ostream
  * 
  */
     if (mat.matrix_data == nullptr) {
@@ -81,6 +82,7 @@ bool break_down_matrix(std::istream &is, Matrix &mat, std::vector<double> &data)
 /**
  * @brief Breaks down the input stream into a vector of doubles, which is then stored in data, and checks if the input is valid
  * @param is, mat, data
+ * @return bool
  */
     char character;
     double number;
@@ -129,6 +131,7 @@ std::istream & operator>>(std::istream &is, Matrix &mat)
 /**
  * @brief Overloaded >> operator for the Matrix class, reads matrix from input stream, uses break_down_matrix to check if input is valid
  * @param is, mat
+ * @return std::istream
  * 
  */
     std::vector<double> data;
@@ -155,6 +158,7 @@ double & Matrix::operator()(int m, int n) const
 /**
  * @brief Overloaded () operator for the Matrix class, returns element (m,n) of the matrix
  * @param m, n
+ * @return double
  */
     return matrix_data[index(m,n)];
 }
@@ -165,7 +169,7 @@ Matrix & Matrix::operator=(const Matrix &mat)
 /**
  * @brief Overloaded = operator for the Matrix class, copies matrix mat to the current matrix
  * @param mat
- * 
+ * @return Matrix
  */
     if (this == &mat) return *this;
     delete [] matrix_data;
@@ -185,7 +189,7 @@ Matrix & Matrix::operator=(Matrix &&mat)
 /**
  * @brief Overloaded = operator for the Matrix class, moves matrix mat to the current matrix, then sets mat to nullptr
  * @param mat
- * 
+ * @return Matrix
  */
     if (this == &mat) return *this;
     delete [] matrix_data;
@@ -202,7 +206,7 @@ Matrix Matrix::operator+(const Matrix &mat) const
 /**
  * @brief Overloaded + operator for the Matrix class, adds matrix mat to the current matrix, matrices must have the same dimensions
  * @param mat
- * 
+ * @return Matrix
  */
     if (rows != mat.rows || columns != mat.columns) {
         std::cout << "Error: matrices must have the same dimensions" << std::endl;
@@ -223,6 +227,7 @@ Matrix Matrix::operator-(const Matrix &mat) const
  * @brief Overloaded - operator for the Matrix class, subtracts matrix mat from the current matrix, 
  * matrices must have the same dimensions
  * @param mat
+ * @return Matrix
  */
     if (rows != mat.rows || columns != mat.columns) {
         std::cout << "Error: matrices must have the same dimensions" << std::endl;
@@ -243,7 +248,7 @@ Matrix Matrix::operator*(const Matrix &mat) const
  * @brief Overloaded * operator for the Matrix class, multiplies the current matrix with matrix mat, 
  * matrices must have compatible dimensions (no. current matrix columns = no. mat matrix rows)
  * @param mat
- * 
+ * @return Matrix
  */
     if (columns != mat.rows) {
         std::cout << "Error: matrices must have compatible dimensions" << std::endl;
@@ -269,7 +274,7 @@ Matrix Matrix::remove_row_column(int n, int m) const
 /**
  * @brief Removes row n and column m from the current matrix, returns the resulting matrix, used to find submatrix
  * @param n, m
- * 
+ * @return Matrix
  */
     if (n>rows || m>columns) {
         std::cout << "Error: out of range" << std::endl;
@@ -296,7 +301,7 @@ double Matrix::determinant() const
 {
 /**
  * @brief Calculates the determinant of the current matrix, by recursively removing finding the determinant of submatrices
- * 
+ * @return double
  */
     if (rows != columns) {
         std::cout << "Error: matrix must be square -> returning ";

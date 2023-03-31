@@ -29,6 +29,11 @@
 // 3. Subtract matrixA and matrixB
 // 4. Multiply matrixA and matrixB
 // 5. Multiply matrixA and matrixC
-// 6. Calculate the determinant of matrixA, matrixB
-// 7. Copy matrixA to a new matrix, matrixD, manipulate matrixA and then print both matrices (showing the deep copy)
-// 8. Move matrixA to a new matrix, matrixE, and then print both matrices (showing the move)
+// 6. Calculate the determinant of matrixA, matrixB and matrixC
+// 7. Demonstrate self-assignment with matrixA
+// 8. Copy matrixA to matrixD using the copy constructor
+// 9. Copy matrixA to matrixE using the copy assignment operator
+// 10. Manipulate matrixA and demonstrate deep copy of matrixD and matrixE
+// 11. Move matrixA to matrixF using the move constructor
+// 12. Move matrixD to matrixG using the move assignment operator
+// 13. Take in user matrix, in the form [a,b,...][c,d,...][...], and print it

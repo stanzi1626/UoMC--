@@ -1,6 +1,7 @@
 //  PHYS 30762 Programming in C++
 //  Assignment 5 - A Matrix class
 //  Created by Alexander Stansfield 15/03/2023
+//  Last updated 24/03/2023
 
 //  Look at preamble.h for description of programme
 
@@ -46,10 +47,10 @@ void user_option(Matrix &matrixA)
     char answer;
     answer_check(answer);
     if (answer == 'y') {
-        std::cout << "Please enter the values in the following format: [a, b, ...][c, d, ...][...]" << std::endl;
+        std::cout << "Please enter the values in the following format: [a,b,...][c,d,...][...]" << std::endl;
         std::cout << "where the number of elements in each square brackets (i.e. # of columns) is the same" << std::endl << std::endl;
         std::cout << "Please enter the values: ";
-        Matrix temp_matrix;
+        Matrix temp_matrix{};
         std::cin >> temp_matrix;
         matrixA = temp_matrix;
         std::cout << "Matrix is valid" << std::endl << std::endl;
@@ -65,6 +66,7 @@ int main()
 {
 /**
  * @brief Main function, read preamble.h for description of programme
+ * @return int
  * 
  */
     // Set values for matrixA
@@ -112,7 +114,7 @@ int main()
     std::cout << "Determinant of matrix A -> det(A): ";
     std::cout << matrixA.determinant() << std::endl;
     std::cout << "Determinant of matrix B -> det(B): ";
-    std::cout << matrixB.determinant() << std::endl << std::endl;
+    std::cout << matrixB.determinant() << std::endl;
     std::cout << "Determinant of matrix C -> det(C): ";
     std::cout << matrixC.determinant() << std::endl;
     print_divider();
@@ -126,9 +128,10 @@ int main()
     std::cout << "Matrix A: " << std::endl;
     std::cout << matrixA << std::endl;
 
-    // Copy matrixA into matrixD, manipulate matrixA and print both matrices
-    std::cout << "Copying matrixA into matrixD -> D = A" << std::endl;
-    Matrix matrixD = matrixA;
+    print_divider();
+
+    std::cout << "Copying Matrix A into matrix D using copy constructor -> D = A" << std::endl;
+    Matrix matrixD{matrixA};
 
     std::cout << "Matrix A: " << std::endl;
     std::cout << matrixA << std::endl;
@@ -137,7 +140,17 @@ int main()
 
     print_divider();
 
-    std::cout << "Changing the value of matrixA[1][1] to 10 to show deep copy Matrix D is unaffected -> D != A" << std::endl;
+    std::cout << "Copying Matrix A into Matrix E using copy assignment -> E = A" << std::endl;
+    Matrix matrixE = matrixA;
+
+    std::cout << "Matrix A: " << std::endl;
+    std::cout << matrixA << std::endl;
+    std::cout << "Matrix E: " << std::endl;
+    std::cout << matrixE << std::endl;
+
+    print_divider();
+
+    std::cout << "Changing the value of matrixA[1][1] (top-left value) to 10 to show deep copy Matrix D is unaffected -> D != A" << std::endl;
     matrixA(1, 1) = 10;
 
     std::cout << "Matrix A: " << std::endl;
@@ -147,23 +160,23 @@ int main()
 
     print_divider();
 
-    std::cout << "Moving matrixA using move constructor into matrixE -> E = A & A = 0" << std::endl;
-    Matrix matrixE(std::move(matrixA));
+    std::cout << "Moving Matrix A using move constructor into Matrix F -> F = A & A = 0" << std::endl;
+    Matrix matrixF(std::move(matrixA));
 
     std::cout << "Matrix A: " << std::endl;
     std::cout << matrixA << std::endl;
-    std::cout << "Matrix E: " << std::endl;
-    std::cout << matrixE << std::endl;
+    std::cout << "Matrix F: " << std::endl;
+    std::cout << matrixF << std::endl;
 
     print_divider();
 
-    std::cout << "Moving matrixD using move assignment into matrixF -> F = D & D = 0" << std::endl;
-    Matrix matrixF = std::move(matrixD);
+    std::cout << "Moving Matrix D using move assignment into Matrix G -> G = D & D = 0" << std::endl;
+    Matrix matrixG = std::move(matrixD);
 
     std::cout << "Matrix D: " << std::endl;
     std::cout << matrixD << std::endl;
-    std::cout << "Matrix F: " << std::endl;
-    std::cout << matrixF << std::endl;
+    std::cout << "Matrix G: " << std::endl;
+    std::cout << matrixG << std::endl;
 
     print_divider();
     print_divider();
