@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <string>
+#include <iomanip>
+
+const double PI = 3.14159265358979323846;
 
 class Shape
 {
@@ -24,9 +27,10 @@ public:
     double getPerimeter() { return m_perimeter; }
 
     void info() {
+        std::cout.setf(std::ios::fixed, std::ios::floatfield);
         std::cout << "Shape2D, Name: " << m_name << std::endl;
-        std::cout << "Area: " << m_area << std::endl;
-        std::cout << "Perimeter: " << m_perimeter << std::endl;
+        std::cout << "Area: " << std::setprecision(2) << m_area << std::endl;
+        std::cout << "Perimeter: " << std::setprecision(2) << m_perimeter << std::endl;
     }
 };
 
@@ -40,8 +44,9 @@ public:
     virtual ~Shape3D() {};
 
     void info() {
+        std::cout.setf(std::ios::fixed, std::ios::floatfield);
         std::cout << "Shape3D, Name: " << m_name << std::endl;
-        std::cout << "Volume: " << m_volume << std::endl;
-        std::cout << "Surface Area: " << m_surfaceArea << std::endl;
+        std::cout << "Volume: " << std::setprecision(2) << m_volume << std::endl;
+        std::cout << "Surface Area: " << std::setprecision(2) << m_surfaceArea << std::endl;
     }
 };

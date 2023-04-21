@@ -29,5 +29,10 @@ int main()
         print_divider();
     }
 
+    for (std::vector<Shape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
+    {
+        delete *it;
+    }
+
     return 0;
 }
