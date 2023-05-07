@@ -90,20 +90,20 @@ void StarCatalogue::print_current_section(){
     }    
 }
 
-Section* StarCatalogue::current_section()
+const Section* StarCatalogue::current_section() const
 {
     switch (m_current_section_type)
     {
     case SectionType::GALAXY:
-        return m_catalogue["Galaxy"].get();
+        return m_catalogue.at("Galaxy").get();
     case SectionType::NEBULA:
-        return m_catalogue["Nebula"].get();
+        return m_catalogue.at("Nebula").get();
     case SectionType::SOLARSYSTEM:
-        return m_catalogue["Solar System"].get();
+        return m_catalogue.at("Solar System").get();
     case SectionType::STAR:
-        return m_catalogue["Star"].get();
+        return m_catalogue.at("Star").get();
     case SectionType::PLANET:
-        return m_catalogue["Planet"].get();
+        return m_catalogue.at("Planet").get();
     default:
         return nullptr;
     }
@@ -158,7 +158,7 @@ void StarCatalogue::printSections()
 {
     for (const auto& [name, section] : m_catalogue) {
         std::cout << "Section " << name << std::endl;
-        section->print();
+        section->get_section_name();
     }
 }
 

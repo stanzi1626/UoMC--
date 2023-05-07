@@ -15,14 +15,11 @@ class AstroObject
 protected:
     std::string m_name;
 public:
-    AstroObject() {};
-    virtual ~AstroObject() {};
-
-    virtual void print() = 0;
+    virtual ~AstroObject() = default;
+    virtual std::string get_astro_name() { return m_name; }
 };
 
-class Galaxy : public AstroObject
-{
+class Galaxy : public AstroObject{
 private:
     // std::string m_galaxy_type;
     double m_total_mass;
@@ -33,16 +30,10 @@ public:
     Galaxy() {};
     Galaxy(const std::string& line);
     ~Galaxy() {};
-
-    void print() {
-        std::cout << "I am a Galaxy with name: " << m_name << "\n";
-    }
 };
 
-class Star : public AstroObject
-{
+class Star : public AstroObject{
 private:
-    std::string name;
     double m_mass;
     // double m_age;
     // double m_radius;
@@ -52,11 +43,6 @@ public:
     Star() {};
     Star(const std::string& line);
     virtual ~Star() {};
-
-    void print() {
-        std::cout << "I am a Star with name: " << m_name << "\n";
-    }
-    void evolve();
 };
 
 class Planet : public AstroObject
@@ -69,10 +55,6 @@ public:
     Planet() {};
     Planet(const std::string& line);
     ~Planet() {};
-
-    void print() {
-        std::cout << "I am a Planet with name: " << m_name << "\n";
-    }
 };
 
 class StellarNebula : public AstroObject
@@ -85,10 +67,6 @@ public:
     StellarNebula() {};
     StellarNebula(const std::string& line);
     ~StellarNebula() {};
-
-    void print() {
-        std::cout << "I am a StellarNebula with name: " << m_name << "\n";
-    }
 };
 
 class SolarSystem : public AstroObject
@@ -101,8 +79,4 @@ public:
     SolarSystem() {};
     SolarSystem(const std::string& line);
     ~SolarSystem() {};
-
-    void print() {
-        std::cout << "I am a SolarSystem with name: " << m_name << "\n";
-    }
 };
