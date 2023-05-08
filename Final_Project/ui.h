@@ -23,7 +23,7 @@ namespace ui {
         std::cout << std::endl;
     }
 
-    void handle_keypress(StarCatalogue& catalogue) {
+    void handle_keypress(StarCatalogue& catalogue, int& arrow_pos, bool& print_info) {
         termios old_tio, new_tio;
         tcgetattr(STDIN_FILENO, &old_tio);
         new_tio = old_tio;
@@ -39,11 +39,30 @@ namespace ui {
                 std::cout << "Exiting..." << std::endl;
                 exit(0);
                 break;
-            case 'j':
+            case 'h':
+                arrow_pos = 0;
                 move_up(catalogue);
                 break;
-            case 'k':
+            case 'l':
+                arrow_pos = 0;
                 move_down(catalogue);
+                break;
+            case 'j':
+                if (arrow_pos < catalogue.current_section()->get_number_objects() - 1) {
+                    arrow_pos++;
+                }
+                break;
+            case 'k':
+                if (arrow_pos > 0) {
+                    arrow_pos--;
+                }
+                break;
+            case '\n':
+                if (print_info) {
+                    print_info = false;
+                } else {
+                    print_info = true;
+                }
                 break;
             default:
                 std::cout << "Invalid key pressed." << std::endl;
@@ -54,15 +73,36 @@ namespace ui {
     }
 
     void run_ui(StarCatalogue& catalogue) {
+        clear_terminal();
+        int arrow_pos = 0;
+        bool print_info = false;
+
         std::cout << "Welcome to the Star Catalogue!" << std::endl;
         std::cout << "Use 'j' to move up and 'k' to move down." << std::endl;
 
         while (true) {
-            std::cout << "Current section: ";
-            catalogue.print_current_section();
+            std::cout << "Current section: " << catalogue.current_section()->get_section_name() << std::endl;
             std::cout << std::endl;
 
-            ui::handle_keypress(catalogue);
+            // Print each object in the section, with an arrow next to the selected one
+            for (int i = 0; i < catalogue.current_section()->get_number_objects(); i++) {
+                if (!print_info) {
+                    if (i == arrow_pos) {
+                        std::cout << " -> ";
+                    } else {
+                        std::cout << "    ";
+                    }
+                    std::cout << catalogue.current_section()->get_object(i)->get_astro_name() << std::endl;
+                } else {
+                    if (i == arrow_pos) {
+                        std::cout << " -> ";
+                        std::cout << catalogue.current_section()->get_object(i)->get_astro_name() << ":" << std::endl;
+                        catalogue.current_section()->get_object(i)->print_astro_info();
+                    }
+                }
+            }
+
+            handle_keypress(catalogue, arrow_pos, print_info);
         }
     }
 

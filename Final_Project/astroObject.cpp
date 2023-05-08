@@ -111,3 +111,28 @@ SolarSystem::SolarSystem(const std::string& line)
     ss.ignore();
     ss.clear();
 }
+
+void Galaxy::print_astro_info() const {
+    std::cout << "Galaxy: " << m_name << std::endl;
+    std::cout << "Total Mass: " << m_total_mass << std::endl;
+}
+
+void Star::print_astro_info() const {
+    std::cout << "Star: " << m_name << std::endl;
+    std::cout << "Mass: " << m_mass << std::endl;
+}
+
+void Planet::print_astro_info() const {
+    std::cout << "Planet: " << m_name << std::endl;
+    std::cout << "Mass: " << m_mass << std::endl;
+}
+
+void StellarNebula::print_astro_info() const {
+    std::cout << "Stellar Nebula: " << m_name << std::endl;
+    std::cout << "Mass: " << m_mass << std::endl;
+}
+
+void SolarSystem::print_astro_info() const {
+    std::cout << "Solar System: " << m_name << std::endl;
+    std::cout << "Age: " << m_age << std::endl;
+}

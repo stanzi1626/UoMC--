@@ -111,7 +111,7 @@ const Section* StarCatalogue::current_section() const
 
 void StarCatalogue::addSection(const std::string& name, std::unique_ptr<Section> section)
 {
-        m_catalogue[name] = std::move(section);
+    m_catalogue[name] = std::move(section);
 }
 
 std::unique_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)

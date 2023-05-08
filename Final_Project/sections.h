@@ -13,9 +13,11 @@ class Section {
 public:
     virtual ~Section() = default;
     virtual void add_object(std::unique_ptr<AstroObject> objPtr) = 0;
-    virtual void print_all_objects() = 0;
+    virtual void print_all_objects() const = 0;
     virtual std::vector<std::shared_ptr<AstroObject>> get_items() const = 0;
     virtual std::string get_section_name() const = 0;
+    int get_number_objects() const { return get_items().size(); };
+    std::shared_ptr<AstroObject> get_object(int index) const { return get_items().at(index); };
 };
 
 class GalaxySection : public Section{
@@ -32,9 +34,9 @@ public:
     void add_object(std::unique_ptr<AstroObject> objPtr) override {
         m_galaxies.push_back(std::move(objPtr));
     }
-    void print_all_objects() override {
+    void print_all_objects() const override {
         for (auto& galaxy : m_galaxies) {
-            galaxy->get_astro_name();
+            std::cout << galaxy->get_astro_name() << std::endl;
         }
     }
 };
@@ -53,9 +55,9 @@ public:
         m_nebulae.push_back(std::move(objPtr));
     }
 
-    void print_all_objects() override {
+    void print_all_objects() const override {
         for (auto& nebula : m_nebulae) {
-            nebula->get_astro_name();
+            std::cout << nebula->get_astro_name() << std::endl;
         }
     }
 };
@@ -74,9 +76,9 @@ public:
         m_solar_systems.push_back(std::move(objPtr));
     }
 
-    void print_all_objects() override {
+    void print_all_objects() const override {
         for (auto& solarSystem : m_solar_systems) {
-            solarSystem->get_astro_name();
+            std::cout << solarSystem->get_astro_name() << std::endl;
         }
     }
 };
@@ -96,9 +98,9 @@ public:
     }
 
 
-    void print_all_objects() override {
+    void print_all_objects() const override {
         for (auto& star : m_stars) {
-            star->get_astro_name();
+            std::cout << star->get_astro_name() << std::endl;
         }
     }
 };
@@ -117,9 +119,9 @@ public:
         m_planets.push_back(std::move(objPtr));
     }
 
-    void print_all_objects() override {
+    void print_all_objects() const override {
         for (auto& planet : m_planets) {
-            planet->get_astro_name();
+            std::cout << planet->get_astro_name() << std::endl;
         }
     }
 };
