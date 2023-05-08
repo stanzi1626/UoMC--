@@ -10,19 +10,34 @@ const std::set<std::string> hubble_type {
     "E0", "E3", "E5", "E7", "S0", "Sa", "Sb", "Sc", "SBa", "SBb", "SBc", "Irr"
 };
 
-class AstroObject {
+class AstroObject : public std::enable_shared_from_this<AstroObject>{
 protected:
     std::string m_name;
+    std::vector<std::shared_ptr<AstroObject>> m_children;
+    std::weak_ptr<AstroObject> m_parent;
+    std::string m_parent_name;
 public:
     virtual ~AstroObject() = default;
+    virtual std::string get_type() = 0;
     std::string get_astro_name() const { return m_name; }
     virtual void print_astro_info() const = 0;
+    std::string get_parent_name() const { return m_parent_name; }
+    void set_parent(std::shared_ptr<AstroObject> parent) { m_parent = parent; }
+    void add_child(std::shared_ptr<AstroObject> child)
+    { 
+        m_children.push_back(child);
+        child->set_parent(shared_from_this());
+    }
+    void set_parent(std::weak_ptr<AstroObject> parent);
+    void add_child(std::shared_ptr<AstroObject> child);
+    void print_parent() const;
+    void print_children() const;
 };
 
 class Galaxy : public AstroObject {
 private:
     // std::string m_galaxy_type;
-    double m_total_mass;
+    double m_mass;
     // double m_stellar_mass_fraction;
     // double m_redshift;
     // std::vector<Galaxy> m_satellites;
@@ -32,6 +47,7 @@ public:
     ~Galaxy() {};
 
     void print_astro_info() const;
+    std::string get_type() override { return "Galaxy"; }
 };
 
 class Star : public AstroObject {
@@ -47,6 +63,7 @@ public:
     virtual ~Star() {};
 
     void print_astro_info() const;
+    std::string get_type() override { return "Star"; }
 };
 
 class Planet : public AstroObject {
@@ -60,6 +77,7 @@ public:
     ~Planet() {};
 
     void print_astro_info() const;
+    std::string get_type() override { return "Planet"; }
 };
 
 class StellarNebula : public AstroObject {
@@ -73,6 +91,7 @@ public:
     ~StellarNebula() {};
 
     void print_astro_info() const;
+    std::string get_type() override { return "StellarNebula"; }
 };
 
 class SolarSystem : public AstroObject {
@@ -86,4 +105,5 @@ public:
     ~SolarSystem() {};
 
     void print_astro_info() const;
+    std::string get_type() override { return "SolarSystem"; }
 };

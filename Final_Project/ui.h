@@ -92,12 +92,12 @@ namespace ui {
                     } else {
                         std::cout << "    ";
                     }
-                    std::cout << catalogue.current_section()->get_object(i)->get_astro_name() << std::endl;
+                    std::cout << catalogue.current_section()->get_object_at_index(i)->get_astro_name() << std::endl;
                 } else {
                     if (i == arrow_pos) {
                         std::cout << " -> ";
-                        std::cout << catalogue.current_section()->get_object(i)->get_astro_name() << ":" << std::endl;
-                        catalogue.current_section()->get_object(i)->print_astro_info();
+                        std::cout << catalogue.current_section()->get_object_at_index(i)->get_astro_name() << ":" << std::endl;
+                        catalogue.current_section()->get_object_at_index(i)->print_astro_info();
                     }
                 }
             }

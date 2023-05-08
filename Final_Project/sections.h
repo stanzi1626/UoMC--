@@ -12,17 +12,25 @@
 class Section {
 public:
     virtual ~Section() = default;
-    virtual void add_object(std::unique_ptr<AstroObject> objPtr) = 0;
+    virtual void add_object(std::shared_ptr<AstroObject> objPtr) = 0;
     virtual void print_all_objects() const = 0;
     virtual std::vector<std::shared_ptr<AstroObject>> get_items() const = 0;
     virtual std::string get_section_name() const = 0;
     int get_number_objects() const { return get_items().size(); };
-    std::shared_ptr<AstroObject> get_object(int index) const { return get_items().at(index); };
+    std::shared_ptr<AstroObject> get_object_at_index(int index) const { return get_items().at(index); };
+    std::shared_ptr<AstroObject> get_object_by_name(const std::string& name) const {
+        for (auto& obj : get_items()) {
+            if (obj->get_astro_name() == name) {
+                return obj;
+            }
+        }
+        return nullptr;
+    };
 };
 
 class GalaxySection : public Section{
 private:
-    std::vector<std::unique_ptr<AstroObject>> m_galaxies;
+    std::vector<std::shared_ptr<AstroObject>> m_galaxies;
 public:
     GalaxySection() {};
     ~GalaxySection() {};
@@ -31,7 +39,7 @@ public:
     std::string get_section_name() const override { return "Galaxies"; };
 
 
-    void add_object(std::unique_ptr<AstroObject> objPtr) override {
+    void add_object(std::shared_ptr<AstroObject> objPtr) override {
         m_galaxies.push_back(std::move(objPtr));
     }
     void print_all_objects() const override {
@@ -43,7 +51,7 @@ public:
 
 class NebulaSection : public Section{
 private:
-    std::vector<std::unique_ptr<AstroObject>> m_nebulae;
+    std::vector<std::shared_ptr<AstroObject>> m_nebulae;
 public:
     NebulaSection() {};
     ~NebulaSection() {};
@@ -51,7 +59,7 @@ public:
     std::vector<std::shared_ptr<AstroObject>> get_items() const;
     std::string get_section_name() const override { return "Nebulae"; };
 
-    void add_object(std::unique_ptr<AstroObject> objPtr) override {
+    void add_object(std::shared_ptr<AstroObject> objPtr) override {
         m_nebulae.push_back(std::move(objPtr));
     }
 
@@ -64,7 +72,7 @@ public:
 
 class SolarSystemSection : public Section{
 private:
-    std::vector<std::unique_ptr<AstroObject>> m_solar_systems;
+    std::vector<std::shared_ptr<AstroObject>> m_solar_systems;
 public:
     SolarSystemSection() {};
     ~SolarSystemSection() {};
@@ -72,7 +80,7 @@ public:
     std::vector<std::shared_ptr<AstroObject>> get_items() const;
     std::string get_section_name() const override { return "Solar Systems"; };
 
-    void add_object(std::unique_ptr<AstroObject> objPtr) override {
+    void add_object(std::shared_ptr<AstroObject> objPtr) override {
         m_solar_systems.push_back(std::move(objPtr));
     }
 
@@ -85,7 +93,7 @@ public:
 
 class StarSection : public Section{
 private:
-    std::vector<std::unique_ptr<AstroObject>> m_stars;
+    std::vector<std::shared_ptr<AstroObject>> m_stars;
 public:
     StarSection() {};
     ~StarSection() {};
@@ -93,7 +101,7 @@ public:
     std::vector<std::shared_ptr<AstroObject>> get_items() const;
     std::string get_section_name() const override { return "Stars"; };
 
-    void add_object(std::unique_ptr<AstroObject> objPtr) override {
+    void add_object(std::shared_ptr<AstroObject> objPtr) override {
         m_stars.push_back(std::move(objPtr));
     }
 
@@ -107,7 +115,7 @@ public:
 
 class PlanetSection : public Section{
 private:
-    std::vector<std::unique_ptr<AstroObject>> m_planets;
+    std::vector<std::shared_ptr<AstroObject>> m_planets;
 public:
     PlanetSection() {};
     ~PlanetSection() {};
@@ -115,7 +123,7 @@ public:
     std::vector<std::shared_ptr<AstroObject>> get_items() const;
     std::string get_section_name() const override { return "Planets"; };
 
-    void add_object(std::unique_ptr<AstroObject> objPtr) override {
+    void add_object(std::shared_ptr<AstroObject> objPtr) override {
         m_planets.push_back(std::move(objPtr));
     }
 

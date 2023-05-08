@@ -32,11 +32,13 @@ public:
     const Section* current_section() const;
     SectionType current_section_type() const { return m_current_section_type; };
     void addSection(const std::string& name, std::unique_ptr<Section> section);
-    std::unique_ptr<AstroObject> make_object(const std::string& line);
-    void add_object(std::string sectionName, std::unique_ptr<AstroObject> object);
+    std::shared_ptr<AstroObject> make_object(const std::string& line);
+    void add_object(std::string sectionName, std::shared_ptr<AstroObject> object);
 
     void print_current_section();
     void printSections();
+    std::shared_ptr<AstroObject> get_object(const std::string& object_name) const;
+    void set_object_relationships();
     void read_file();
     // void sort();
     // void search();

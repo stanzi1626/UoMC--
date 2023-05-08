@@ -114,29 +114,45 @@ void StarCatalogue::addSection(const std::string& name, std::unique_ptr<Section>
     m_catalogue[name] = std::move(section);
 }
 
-std::unique_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)
+std::shared_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)
 {
-    std::unique_ptr<AstroObject> object_ptr;
+    std::shared_ptr<AstroObject> object_ptr;
     // Check what type of object the line describes
     if (line.find("Galaxy") != std::string::npos) {
         // Make a Galaxy object
-        object_ptr = std::make_unique<Galaxy>(line);
+        object_ptr = std::make_shared<Galaxy>(line);
+        // Print if the object was successfully created
+        if (object_ptr) {
+            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
+        }
     }
     else if (line.find("Star") != std::string::npos) {
         // Make a Star object
-        object_ptr = std::make_unique<Star>(line);
+        object_ptr = std::make_shared<Star>(line);
+        if (object_ptr) {
+            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
+        }
     }
     else if (line.find("Planet") != std::string::npos) {
         // Make a Planet object
-        object_ptr = std::make_unique<Planet>(line);
+        object_ptr = std::make_shared<Planet>(line);
+        if (object_ptr) {
+            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
+        }
     }
     else if (line.find("Stellar Nebula") != std::string::npos) {
         // Make a Stellar Nebula object
-        object_ptr = std::make_unique<StellarNebula>(line);
+        object_ptr = std::make_shared<StellarNebula>(line);
+        if (object_ptr) {
+            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
+        }
     }
     else if (line.find("Solar System") != std::string::npos) {
         // Make an Solar System object
-        object_ptr = std::make_unique<SolarSystem>(line);
+        object_ptr = std::make_shared<SolarSystem>(line);
+        if (object_ptr) {
+            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
+        }
     }
     else {
         std::cout << "Error: Unknown object type." << std::endl;
@@ -146,7 +162,7 @@ std::unique_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)
 }
 
 
-void StarCatalogue::add_object(std::string sectionName, std::unique_ptr<AstroObject> objPtr) {
+void StarCatalogue::add_object(std::string sectionName, std::shared_ptr<AstroObject> objPtr) {
     auto it = m_catalogue.find(sectionName);
     if (it != m_catalogue.end()) {
         Section* section = it->second.get();
@@ -162,6 +178,30 @@ void StarCatalogue::printSections()
     }
 }
 
+std::shared_ptr<AstroObject> StarCatalogue::get_object(const std::string& object_name) const {
+    for (const auto& [name, section_ptr] : m_catalogue) {
+        for (const auto& object_ptr : section_ptr->get_items()) {
+            if (object_ptr->get_astro_name() == object_name) {
+                return object_ptr;
+            }
+        }
+    }
+    return nullptr;
+}
+
+void StarCatalogue::set_object_relationships() {
+    // Set parent and child pointers
+    for (const auto& [name, section_ptr] : m_catalogue) {
+        for (const auto& item : section_ptr->get_items()) {
+            if (item->get_parent_name() != "") {
+                std::shared_ptr<AstroObject> parent_ptr = get_object(item->get_parent_name());
+                item->set_parent(parent_ptr);
+                parent_ptr->add_child(item);
+            }
+        }
+    }
+}
+
 void StarCatalogue::read_file()
 {
     std::string line;
@@ -171,9 +211,11 @@ void StarCatalogue::read_file()
     // skip the first line
     std::getline(file, line);
 
+    // Check what type of object the line describes
+    // and add it to the correct section
     while (std::getline(file, line)) {
         // Make the AstroObject from the line
-        std::unique_ptr<AstroObject> object_ptr = make_object(line);
+        std::shared_ptr<AstroObject> object_ptr = make_object(line);
 
         // Check what type of object the line describes
         // and add it to the correct section
@@ -196,6 +238,8 @@ void StarCatalogue::read_file()
             std::cout << "Error: Unknown object type." << std::endl;
         }
     }
-    file.close();
+    // Set parent and child pointers
+    set_object_relationships();
 
+    file.close();
 }
