@@ -1,6 +1,7 @@
 #include <string>
 #include <list>
 #include <fstream>
+#include <algorithm>
 
 #include "starCatalogue.h"
 
@@ -205,11 +206,39 @@ void StarCatalogue::set_object_relationships() {
     }
 }
 
-void StarCatalogue::read_file()
+void StarCatalogue::remove_object(std::shared_ptr<AstroObject> object_ptr)
+{
+    // Remove the object from the catalogue
+    std::string section_name = object_ptr->get_type();
+    std::vector<std::shared_ptr<AstroObject>>& section = m_catalogue[section_name]->get_items_not_const();
+    auto it = std::find_if(section.begin(), section.end(),
+                       [&](const std::shared_ptr<AstroObject>& ptr)
+                       { return ptr->get_astro_name() == object_ptr->get_astro_name(); });
+    if (it != section.end()) {
+        section.erase(it);
+    }
+
+    // Remove the object from the parent's children list
+    std::shared_ptr<AstroObject> parent_ptr = object_ptr->get_parent().lock();
+    if (parent_ptr != nullptr) {
+        std::vector<std::shared_ptr<AstroObject>>& children = parent_ptr->get_children();
+        auto child_it = std::find(children.begin(), children.end(), object_ptr);
+        if (child_it != children.end()) {
+            children.erase(child_it);
+        }
+    }
+
+    // Remove the object from the child's parent pointer
+    for (std::shared_ptr<AstroObject> child_ptr : object_ptr->get_children()) {
+        child_ptr->set_parent(nullptr);
+    }
+}
+
+void StarCatalogue::read_file(const std::string& filename)
 {
     std::string line;
 
-    std::ifstream file("starCatalogue.csv");
+    std::ifstream file(filename);
 
     // skip the first line
     std::getline(file, line);
@@ -220,8 +249,31 @@ void StarCatalogue::read_file()
         // Make the AstroObject from the line
         std::shared_ptr<AstroObject> object_ptr = make_object(line);
 
-        // Check what type of object the line describes
-        // and add it to the correct section
+        // Check whether the object has the same name as an object already in the catalogue
+        // If it does, then prompt the user for their choice
+        std::string object_name = object_ptr->get_astro_name();
+        std::shared_ptr<AstroObject> existing_object_ptr = get_object(object_name);
+        if (existing_object_ptr != nullptr) {
+            std::cout << "Object with name " << object_name << " already exists." << std::endl;
+            std::cout << "Do you want to replace the existing object with this new one?" << std::endl;
+            // Print the existing object and the new object
+            std::cout << "Existing object: " << std::endl;
+            existing_object_ptr->print_astro_info();
+            std::cout << "New object: " << std::endl;
+            object_ptr->print_astro_info();
+            std::cout << "Enter 'y' for yes or 'n' for no: ";
+            char choice;
+            std::cin >> choice;
+            if (choice == 'y') {
+                // Replace the existing object with the new one
+                remove_object(existing_object_ptr);
+            } else {
+                // Discard the new object
+                continue;
+            }
+        }
+
+        // Add the object to the catalogue
         std::string section_name = object_ptr->get_type();
         add_object(section_name, object_ptr);
     }
@@ -233,4 +285,24 @@ void StarCatalogue::read_file()
     std::cin.get();
 
     file.close();
+}
+
+void StarCatalogue::save_to_csv(const std::string& filename) const {
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not create file \"" << filename << "\"" << std::endl;
+        return;
+    }
+
+
+    file << std::string("Type, Name, Parent name, Mass, Age") << std::endl;
+    for (const auto& section : m_catalogue) {
+        for (const auto& item : section.second->get_items()) {
+            file << item->get_info() << std::endl;
+        }
+    }
+
+    file.close();
+    std::cout << "Catalogue saved to file \"" << filename << "\"" << std::endl;
 }

@@ -15,6 +15,7 @@ public:
     virtual void add_object(std::shared_ptr<AstroObject>& objPtr) = 0;
     virtual void print_all_objects() const = 0;
     virtual const std::vector<std::shared_ptr<AstroObject>>& get_items() const = 0;
+    virtual std::vector<std::shared_ptr<AstroObject>>& get_items_not_const() = 0;
     virtual std::string get_section_name() const = 0;
     int get_number_objects() const { return get_items().size(); };
     std::shared_ptr<AstroObject> get_object_at_index(int index) const { return get_items().at(index); };
@@ -35,7 +36,8 @@ public:
     GalaxySection() {};
     ~GalaxySection() {};
 
-    const std::vector<std::shared_ptr<AstroObject>>& get_items() const;
+    const std::vector<std::shared_ptr<AstroObject>>& get_items() const override { return m_galaxies; };
+    std::vector<std::shared_ptr<AstroObject>>& get_items_not_const() override { return m_galaxies; };
     std::string get_section_name() const override { return "Galaxies"; };
 
 
@@ -56,7 +58,8 @@ public:
     NebulaSection() {};
     ~NebulaSection() {};
 
-    const std::vector<std::shared_ptr<AstroObject>>& get_items() const;
+    const std::vector<std::shared_ptr<AstroObject>>& get_items() const override { return m_nebulae; };
+    std::vector<std::shared_ptr<AstroObject>>& get_items_not_const() override { return m_nebulae; };
     std::string get_section_name() const override { return "Nebulae"; };
 
     void add_object(std::shared_ptr<AstroObject>& objPtr) override {
@@ -77,7 +80,8 @@ public:
     SolarSystemSection() {};
     ~SolarSystemSection() {};
 
-    const std::vector<std::shared_ptr<AstroObject>>& get_items() const;
+    const std::vector<std::shared_ptr<AstroObject>>& get_items() const override { return m_solar_systems; };
+    std::vector<std::shared_ptr<AstroObject>>& get_items_not_const() override { return m_solar_systems; };
     std::string get_section_name() const override { return "Solar Systems"; };
 
     void add_object(std::shared_ptr<AstroObject>& objPtr) override {
@@ -98,7 +102,8 @@ public:
     StarSection() {};
     ~StarSection() {};
 
-    const std::vector<std::shared_ptr<AstroObject>>& get_items() const;
+    const std::vector<std::shared_ptr<AstroObject>>& get_items() const override { return m_stars; };
+    std::vector<std::shared_ptr<AstroObject>>& get_items_not_const() override { return m_stars; };
     std::string get_section_name() const override { return "Stars"; };
 
     void add_object(std::shared_ptr<AstroObject>& objPtr) override {
@@ -120,7 +125,8 @@ public:
     PlanetSection() {};
     ~PlanetSection() {};
 
-    const std::vector<std::shared_ptr<AstroObject>>& get_items() const;
+    const std::vector<std::shared_ptr<AstroObject>>& get_items() const override { return m_planets; };
+    std::vector<std::shared_ptr<AstroObject>>& get_items_not_const() override { return m_planets; };
     std::string get_section_name() const override { return "Planets"; };
 
     void add_object(std::shared_ptr<AstroObject>& objPtr) override {

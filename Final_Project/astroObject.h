@@ -24,8 +24,11 @@ public:
     std::string get_parent_name() const { return m_parent_name; }
     void set_parent(std::shared_ptr<AstroObject> parent);
     void add_child(std::shared_ptr<AstroObject> child);
+    std::weak_ptr<AstroObject> get_parent() const { return m_parent; }
+    std::vector<std::shared_ptr<AstroObject>>& get_children() { return m_children; }
     void print_parent() const;
     void print_children() const;
+    virtual std::string get_info() const = 0;
 };
 
 class Galaxy : public AstroObject {
@@ -40,8 +43,9 @@ public:
     Galaxy(const std::string& line);
     ~Galaxy() {};
 
-    void print_astro_info() const;
+    void print_astro_info() const override;
     std::string get_type() override { return "Galaxy"; }
+    std::string get_info() const override;
 };
 
 class Star : public AstroObject {
@@ -56,8 +60,9 @@ public:
     Star(const std::string& line);
     virtual ~Star() {};
 
-    void print_astro_info() const;
+    void print_astro_info() const override;
     std::string get_type() override { return "Star"; }
+    std::string get_info() const override;
 };
 
 class Planet : public AstroObject {
@@ -70,8 +75,9 @@ public:
     Planet(const std::string& line);
     ~Planet() {};
 
-    void print_astro_info() const;
+    void print_astro_info() const override;
     std::string get_type() override { return "Planet"; }
+    std::string get_info() const override;
 };
 
 class StellarNebula : public AstroObject {
@@ -84,8 +90,9 @@ public:
     StellarNebula(const std::string& line);
     ~StellarNebula() {};
 
-    void print_astro_info() const;
+    void print_astro_info() const override;
     std::string get_type() override { return "Stellar Nebula"; }
+    std::string get_info() const override;
 };
 
 class SolarSystem : public AstroObject {
@@ -98,6 +105,7 @@ public:
     SolarSystem(const std::string& line);
     ~SolarSystem() {};
 
-    void print_astro_info() const;
+    void print_astro_info() const override;
     std::string get_type() override { return "Solar System"; }
+    std::string get_info() const override;
 };

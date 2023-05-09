@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <termios.h>
 #include <unistd.h>
@@ -7,6 +8,42 @@ namespace ui {
 
     void clear_terminal() {
         std::cout << "\033[2J\033[1;1H";
+    }
+
+    void input_filenames(std::vector<std::string>& filenames) {
+        while (true) {
+            std::string filename;
+            std::cout << "Enter the name of the file you would like to read into the catalogue (or 'q' to quit): ";
+            std::cin >> filename;
+
+            if (filename == "q") {
+                // Clear the input buffer
+                std::cin.clear();
+                std::cin.ignore(256, '\n');
+                break;
+            } else if (filename.substr(filename.length() - 4) != ".csv") {
+                std::cerr << "Error: Filename must end with \".csv\"" << std::endl;
+            } else {
+                filenames.push_back(filename);
+            }
+        }
+    }
+
+    void read_files(StarCatalogue& catalogue, const std::vector<std::string>& filenames) {
+        std::cout << "Reading files..." << std::endl;
+
+        for (const auto filename : filenames) {
+            std::ifstream file(filename);
+
+            if (!file.is_open()) {
+                std::cerr << "Error: Could not open file \"" << filename << "\"" << std::endl;
+                continue;
+            }
+
+            catalogue.read_file(filename);
+
+            file.close();
+       }
     }
 
     void move_up(StarCatalogue& catalogue) {
@@ -23,7 +60,7 @@ namespace ui {
         std::cout << std::endl;
     }
 
-    void handle_keypress(StarCatalogue& catalogue, int& arrow_pos, bool& print_info) {
+    void handle_catalogue_keypress(StarCatalogue& catalogue, int& arrow_pos, bool& print_info, bool& exit_catalogue) {
         termios old_tio, new_tio;
         tcgetattr(STDIN_FILENO, &old_tio);
         new_tio = old_tio;
@@ -36,24 +73,30 @@ namespace ui {
 
         switch (key) {
             case 'q':
-                std::cout << "Exiting..." << std::endl;
-                exit(0);
+                std::cout << "Exiting Star Catalogue..." << std::endl;
+                std::cout << "Press any key to continue..." << std::endl;
+                getchar();
+                exit_catalogue = true;
                 break;
             case 'h':
-                arrow_pos = 0;
-                move_up(catalogue);
+                if (print_info == false) {
+                    arrow_pos = 0;
+                    move_up(catalogue);
+                }
                 break;
             case 'l':
-                arrow_pos = 0;
-                move_down(catalogue);
+                if (print_info == false) {
+                    arrow_pos = 0;
+                    move_down(catalogue);
+                }
                 break;
             case 'j':
-                if (arrow_pos < catalogue.current_section()->get_number_objects() - 1) {
+                if (arrow_pos < catalogue.current_section()->get_number_objects() - 1 && print_info == false) {
                     arrow_pos++;
                 }
                 break;
             case 'k':
-                if (arrow_pos > 0) {
+                if (arrow_pos > 0 && print_info == false) {
                     arrow_pos--;
                 }
                 break;
@@ -72,15 +115,15 @@ namespace ui {
         clear_terminal();
     }
 
-    void run_ui(StarCatalogue& catalogue) {
+    void print_catalogue(StarCatalogue& catalogue) {
         clear_terminal();
         int arrow_pos = 0;
         bool print_info = false;
+        bool exit_catalogue = false;
 
-        std::cout << "Welcome to the Star Catalogue!" << std::endl;
-        std::cout << "Use 'j' to move up and 'k' to move down." << std::endl;
+        std::cout << "Use 'j' to move up, 'k' to move down, 'h' to move left, 'l' to move right, 'q' to quit, and 'enter' to view more information." << std::endl;
 
-        while (true) {
+        while (!exit_catalogue) {
             std::cout << "Current section: " << catalogue.current_section()->get_section_name() << std::endl;
             std::cout << std::endl;
 
@@ -102,8 +145,122 @@ namespace ui {
                 }
             }
 
-            handle_keypress(catalogue, arrow_pos, print_info);
+            handle_catalogue_keypress(catalogue, arrow_pos, print_info, exit_catalogue);
         }
     }
 
+    void handle_menu_keypress(bool& execute_option, int num_options, int& arrow_pos) {
+        termios old_tio, new_tio;
+        tcgetattr(STDIN_FILENO, &old_tio);
+        new_tio = old_tio;
+        new_tio.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &new_tio);
+
+        char key = getchar();
+
+        tcsetattr(STDIN_FILENO, TCSANOW, &old_tio);
+
+            switch (key) {
+        case 'q':
+            std::cout << "Exiting..." << std::endl;
+            exit(0);
+            break;
+        case 'j':
+            if (arrow_pos < num_options - 1) {
+                arrow_pos++;
+            }
+            break;
+        case 'k':
+            if (arrow_pos > 0) {
+                arrow_pos--;
+            }
+            break;
+        case '\n':
+            execute_option = true;
+            break;
+        default:
+            std::cout << "Invalid key pressed." << std::endl;
+            break;
+        }
+        clear_terminal();
+    }
+
+    void execute_appropriate_function(int option, StarCatalogue& catalogue, std::vector<std::string>& filenames, std::string& save_filename) {
+        switch (option) {
+            case 0:
+                clear_terminal();
+                input_filenames(filenames);
+                break;
+            case 1:
+                clear_terminal();
+                read_files(catalogue, filenames);
+                break;
+            case 2:
+                clear_terminal();
+                print_catalogue(catalogue);
+                break;
+            case 3:
+                clear_terminal();
+                catalogue.save_to_csv(save_filename);
+                // Press to continue
+                std::cout << "Press any key to continue..." << std::endl;
+                getchar();
+                break;
+            case 4:
+                std::cout << "Exiting..." << std::endl;
+                exit(0);
+                break;
+            default:
+                std::cout << "Invalid option selected." << std::endl;
+                break;
+        }
+    }
+
+    void main_menu(StarCatalogue& catalogue) {
+        int arrow_pos = 0;
+        bool execute_option = false;
+
+        std::vector<std::string> filenames;
+        std::string save_filename = "saved_catalogue.csv";
+
+        std::cout << "Welcome to the Star Catalogue!" << std::endl;
+        std::cout << "Use 'j' to move down the menu, 'k' to move up the menu and 'q' to quit." << std::endl << std::endl;
+
+        while (true) {
+            for (int i = 0; i < 5; i++) {
+                if (arrow_pos == i) {
+                    std::cout << " -> ";
+                } else {
+                    std::cout << "   ";
+                }
+                switch (i) {
+                    case 0:
+                        std::cout << "Input filenames" << std::endl;
+                        break;
+                    case 1:
+                        std::cout << "Load files into catalogue" << std::endl;
+                        break;
+                    case 2:
+                        std::cout << "Print catalogue" << std::endl;
+                        break;
+                    case 3:
+                        std::cout << "Save catalogue" << std::endl;
+                        break;
+                    case 4:
+                        std::cout << "Exit" << std::endl;
+                        break;
+                    default:
+                        std::cout << "Invalid option selected." << std::endl;
+                        break;
+                }
+            }
+            if (execute_option) {
+                execute_appropriate_function(arrow_pos, catalogue, filenames, save_filename);
+                execute_option = false;
+                clear_terminal();
+            } else {
+                handle_menu_keypress(execute_option, 5, arrow_pos);
+            }
+        }
+    }
 }  // namespace ui

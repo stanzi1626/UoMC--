@@ -6,9 +6,8 @@ int main() {
     // Initialize the catalogue
     StarCatalogue catalogue;
 
-    // Read the file
-    catalogue.read_file();
+    // Main Menu
+    ui::main_menu(catalogue);
 
-    // Run the UI
-    ui::run_ui(catalogue);
+    return 0;
 }

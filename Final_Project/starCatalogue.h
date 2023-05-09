@@ -39,10 +39,7 @@ public:
     void printSections();
     std::shared_ptr<AstroObject> get_object(const std::string& object_name) const;
     void set_object_relationships();
-    void read_file();
-    // void sort();
-    // void search();
-    // void add();
-    // void remove();
-    // void save();
+    void remove_object(std::shared_ptr<AstroObject> object_ptr);
+    void read_file(const std::string& filename);
+    void save_to_csv(const std::string& filename) const;
 };

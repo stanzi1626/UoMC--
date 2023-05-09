@@ -1,5 +1,6 @@
 Type, Name, Parent name, Mass, Age
 Galaxy,Milky Way,,8.2e11,
+Galaxy,Milky Way,,1010101010101,
 Galaxy,Andromeda,,1.76e12,
 Stellar Nebula,Eagle Nebula,Andromeda,2.5e36,
 Solar System,Solar System,Milky Way,,4.6e9

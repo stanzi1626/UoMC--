@@ -138,20 +138,21 @@ SolarSystem::SolarSystem(const std::string& line)
 
 void AstroObject::print_parent() const {
     if (m_parent.expired()) {
-        std::cout << "No parent" << std::endl;
+        std::cout << "Parent: NONE" << std::endl;
     }
     else {
-        std::cout << "Parent: " << m_parent.lock()->get_astro_name() << std::endl;
+        std::cout << std::endl << "Parent: " << m_parent.lock()->get_astro_name() << std::endl;
     }
 }
 
 void AstroObject::print_children() const {
     if (m_children.empty()) {
-        std::cout << "No children" << std::endl;
+        std::cout << "Children: NONE" << std::endl;
     }
     else {
+        std::cout << "Children: " << std::endl;
         for (auto it = m_children.begin(); it != m_children.end(); ++it) {
-            std::cout << (*it)->get_astro_name() << std::endl;
+            std::cout << " | " << " -> " << (*it)->get_astro_name() << std::endl;
         }
     }
 }
@@ -189,4 +190,39 @@ void SolarSystem::print_astro_info() const {
     std::cout << "Age: " << m_age << std::endl;
     print_parent();
     print_children();
+}
+
+std::string Galaxy::get_info() const {
+    // Type, Name, Parent name, Mass, Age
+    std::string galaxy_info = std::string("Galaxy") + std::string(",") + m_name + std::string(",") \
+                              + m_parent_name + std::string(",") + std::to_string(m_mass) + std::string(",");
+    return galaxy_info;
+}
+
+std::string Star::get_info() const {
+    // Type, Name, Parent name, Mass, Age
+    std::string star_info = std::string("Star") + std::string(",") + m_name + std::string(",") \
+                              + m_parent_name + std::string(",") + std::to_string(m_mass) + std::string(",");
+    return star_info;
+}
+
+std::string Planet::get_info() const {
+    // Type, Name, Parent name, Mass, Age
+    std::string planet_info = std::string("Planet") + std::string(",") + m_name + std::string(",") \
+                              + m_parent_name + std::string(",") + std::to_string(m_mass) + std::string(",");
+    return planet_info;
+}
+
+std::string StellarNebula::get_info() const {
+    // Type, Name, Parent name, Mass, Age
+    std::string nebula_info = std::string("Stellar Nebula") + std::string(",") + m_name + std::string(",") \
+                              + m_parent_name + std::string(",") + std::to_string(m_mass) + std::string(",");
+    return nebula_info;
+}
+
+std::string SolarSystem::get_info() const {
+    // Type, Name, Parent name, Mass, Age
+    std::string solar_system_info = std::string("Solar System") + std::string(",") + m_name + std::string(",") \
+                              + m_parent_name + std::string(",") + std::string(",") + std::to_string(m_age);
+    return solar_system_info;
 }
