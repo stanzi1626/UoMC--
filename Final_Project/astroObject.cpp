@@ -3,7 +3,7 @@
 
 #include "astroObject.h"
 
-void AstroObject::set_parent(std::weak_ptr<AstroObject> parent) {
+void AstroObject::set_parent(std::shared_ptr<AstroObject> parent) {
     m_parent = parent;
 }
 

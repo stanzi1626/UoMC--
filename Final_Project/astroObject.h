@@ -17,18 +17,12 @@ protected:
     std::weak_ptr<AstroObject> m_parent;
     std::string m_parent_name;
 public:
-    virtual ~AstroObject() = default;
+    ~AstroObject() { std::cout << "AstroObject destructor called for name: " << m_name << std::endl; };
     virtual std::string get_type() = 0;
     std::string get_astro_name() const { return m_name; }
     virtual void print_astro_info() const = 0;
     std::string get_parent_name() const { return m_parent_name; }
-    void set_parent(std::shared_ptr<AstroObject> parent) { m_parent = parent; }
-    void add_child(std::shared_ptr<AstroObject> child)
-    { 
-        m_children.push_back(child);
-        child->set_parent(shared_from_this());
-    }
-    void set_parent(std::weak_ptr<AstroObject> parent);
+    void set_parent(std::shared_ptr<AstroObject> parent);
     void add_child(std::shared_ptr<AstroObject> child);
     void print_parent() const;
     void print_children() const;
@@ -91,7 +85,7 @@ public:
     ~StellarNebula() {};
 
     void print_astro_info() const;
-    std::string get_type() override { return "StellarNebula"; }
+    std::string get_type() override { return "Stellar Nebula"; }
 };
 
 class SolarSystem : public AstroObject {
@@ -105,5 +99,5 @@ public:
     ~SolarSystem() {};
 
     void print_astro_info() const;
-    std::string get_type() override { return "SolarSystem"; }
+    std::string get_type() override { return "Solar System"; }
 };

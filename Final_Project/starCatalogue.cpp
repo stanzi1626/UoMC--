@@ -7,7 +7,7 @@
 StarCatalogue::StarCatalogue()
 {
     addSection("Galaxy", std::make_unique<GalaxySection>());
-    addSection("Nebula", std::make_unique<NebulaSection>());
+    addSection("Stellar Nebula", std::make_unique<NebulaSection>());
     addSection("Solar System", std::make_unique<SolarSystemSection>());
     addSection("Star", std::make_unique<StarSection>());
     addSection("Planet", std::make_unique<PlanetSection>());
@@ -97,7 +97,7 @@ const Section* StarCatalogue::current_section() const
     case SectionType::GALAXY:
         return m_catalogue.at("Galaxy").get();
     case SectionType::NEBULA:
-        return m_catalogue.at("Nebula").get();
+        return m_catalogue.at("Stellar Nebula").get();
     case SectionType::SOLARSYSTEM:
         return m_catalogue.at("Solar System").get();
     case SectionType::STAR:
@@ -162,11 +162,14 @@ std::shared_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)
 }
 
 
-void StarCatalogue::add_object(std::string sectionName, std::shared_ptr<AstroObject> objPtr) {
+void StarCatalogue::add_object(std::string& sectionName, std::shared_ptr<AstroObject>& obj_ptr) {
     auto it = m_catalogue.find(sectionName);
+    // if (it != m_catalogue.end()) {
+    //     Section* section = it->second.get();
+    //     section->add_object(std::move(objPtr));
+    // }
     if (it != m_catalogue.end()) {
-        Section* section = it->second.get();
-        section->add_object(std::move(objPtr));
+        it->second->add_object(obj_ptr);
     }
 }
 
@@ -219,27 +222,15 @@ void StarCatalogue::read_file()
 
         // Check what type of object the line describes
         // and add it to the correct section
-        if (typeid(*object_ptr) == typeid(Galaxy)) {
-            add_object("Galaxy", std::move(object_ptr));
-        }
-        else if (typeid(*object_ptr) == typeid(StellarNebula)) {
-            add_object("Nebula", std::move(object_ptr));
-        }
-        else if (typeid(*object_ptr) == typeid(SolarSystem)) {
-            add_object("Solar System", std::move(object_ptr));
-        }
-        else if (typeid(*object_ptr) == typeid(Star)) {
-            add_object("Star", std::move(object_ptr));
-        }
-        else if (typeid(*object_ptr) == typeid(Planet)) {
-            add_object("Planet", std::move(object_ptr));
-        }
-        else {
-            std::cout << "Error: Unknown object type." << std::endl;
-        }
+        std::string section_name = object_ptr->get_type();
+        add_object(section_name, object_ptr);
     }
     // Set parent and child pointers
     set_object_relationships();
+
+    // DEBUG - wait for input
+    std::cout << "Press enter to continue..." << std::endl;
+    std::cin.get();
 
     file.close();
 }
