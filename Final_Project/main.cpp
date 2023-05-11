@@ -3,6 +3,9 @@
 #include "ui.h"
 
 int main() {
+    // Clear the terminal
+    ui::clear_terminal();
+
     // Initialize the catalogue
     StarCatalogue catalogue;
 

@@ -33,6 +33,7 @@ public:
     SectionType current_section_type() const { return m_current_section_type; };
     void addSection(const std::string& name, std::unique_ptr<Section> section);
     std::shared_ptr<AstroObject> make_object(const std::string& line);
+    std::shared_ptr<AstroObject> make_usr_object();
     void add_object(std::string& sectionName, std::shared_ptr<AstroObject>& object);
 
     void print_current_section();

@@ -41,6 +41,7 @@ private:
 public:
     Galaxy() {};
     Galaxy(const std::string& line);
+    Galaxy(std::string name, double mass) : m_mass(mass) { m_name = name; };
     ~Galaxy() {};
 
     void print_astro_info() const override;
@@ -58,6 +59,7 @@ private:
 public:
     Star() {};
     Star(const std::string& line);
+    Star(std::string name, double mass) : m_mass(mass) { m_name = name; };
     virtual ~Star() {};
 
     void print_astro_info() const override;
@@ -73,6 +75,7 @@ private:
 public:
     Planet() {};
     Planet(const std::string& line);
+    Planet(std::string name, double mass) : m_mass(mass) { m_name = name; };
     ~Planet() {};
 
     void print_astro_info() const override;
@@ -88,6 +91,7 @@ private:
 public:
     StellarNebula() {};
     StellarNebula(const std::string& line);
+    StellarNebula(std::string name, double mass) : m_mass(mass) { m_name = name; };
     ~StellarNebula() {};
 
     void print_astro_info() const override;
@@ -103,6 +107,7 @@ private:
 public:
     SolarSystem() {};
     SolarSystem(const std::string& line);
+    SolarSystem(std::string name, double age) : m_age(age) { m_name = name; };
     ~SolarSystem() {};
 
     void print_astro_info() const override;

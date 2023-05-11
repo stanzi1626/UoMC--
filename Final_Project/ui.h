@@ -32,18 +32,28 @@ namespace ui {
     void read_files(StarCatalogue& catalogue, const std::vector<std::string>& filenames) {
         std::cout << "Reading files..." << std::endl;
 
-        for (const auto filename : filenames) {
+        if (filenames.size() == 0) {
+            std::cout << "No files to read." << std::endl;
+            return;
+        } else {
+            for (const auto filename : filenames) {
             std::ifstream file(filename);
 
             if (!file.is_open()) {
-                std::cerr << "Error: Could not open file \"" << filename << "\"" << std::endl;
+                std::cerr << "Error: Could not open file \"" << filename << "\", this file might not exist." << std::endl;
                 continue;
             }
 
             catalogue.read_file(filename);
 
             file.close();
-       }
+
+            std::cout << "Successfully read file \"" << filename << "\"" << std::endl;
+            }
+        }
+        // Press to continue
+        std::cout << "Press any key to continue..." << std::endl;
+        getchar();
     }
 
     void move_up(StarCatalogue& catalogue) {
@@ -121,9 +131,9 @@ namespace ui {
         bool print_info = false;
         bool exit_catalogue = false;
 
-        std::cout << "Use 'j' to move up, 'k' to move down, 'h' to move left, 'l' to move right, 'q' to quit, and 'enter' to view more information." << std::endl;
-
         while (!exit_catalogue) {
+            std::cout << "Use 'j' to move up, 'k' to move down, 'h' to move left, 'l' to move right, 'q' to quit, and 'enter' to view more information." << std::endl;
+
             std::cout << "Current section: " << catalogue.current_section()->get_section_name() << std::endl;
             std::cout << std::endl;
 
@@ -131,7 +141,7 @@ namespace ui {
             for (int i = 0; i < catalogue.current_section()->get_number_objects(); i++) {
                 if (!print_info) {
                     if (i == arrow_pos) {
-                        std::cout << " -> ";
+                        std::cout << " ->  ";
                     } else {
                         std::cout << "    ";
                     }
@@ -197,16 +207,20 @@ namespace ui {
                 break;
             case 2:
                 clear_terminal();
-                print_catalogue(catalogue);
+                // TODO: Implement this
                 break;
             case 3:
+                clear_terminal();
+                print_catalogue(catalogue);
+                break;
+            case 4:
                 clear_terminal();
                 catalogue.save_to_csv(save_filename);
                 // Press to continue
                 std::cout << "Press any key to continue..." << std::endl;
                 getchar();
                 break;
-            case 4:
+            case 5:
                 std::cout << "Exiting..." << std::endl;
                 exit(0);
                 break;
@@ -216,18 +230,62 @@ namespace ui {
         }
     }
 
-    void main_menu(StarCatalogue& catalogue) {
+    int make_usr_object_menu() {
+        int num_options = 3;
         int arrow_pos = 0;
         bool execute_option = false;
+
+        while (true) {
+            std::cout << "Use 'j' to move down the menu, 'k' to move up the menu and 'q' to quit." << std::endl << std::endl;
+            for (int i = 0; i < num_options; i++) {
+                if (arrow_pos == i) {
+                    std::cout << " ->  ";
+                } else {
+                    std::cout << "    ";
+                }
+                switch (i) {
+                    case 0:
+                        std::cout << "Make a Galaxy" << std::endl;
+                        break;
+                    case 1:
+                        std::cout << "Make a Stellar Nebula" << std::endl;
+                        break;
+                    case 2:
+                        std::cout << "Make a Solar System" << std::endl;
+                        break;
+                    case 3:
+                        std::cout << "Make a Star" << std::endl;
+                        break;
+                    case 4:
+                        std::cout << "Make a Planet" << std::endl;
+                        break;
+                    default:
+                        std::cout << "Invalid option selected." << std::endl;
+                        break;
+                }
+            }
+
+            handle_menu_keypress(execute_option, num_options, arrow_pos);
+
+            if (execute_option) {
+                return arrow_pos;
+            }
+        }
+    }
+
+    void main_menu(StarCatalogue& catalogue) {
+        int num_options = 6;
+        int arrow_pos = 0;
+        bool execute_option = false;
+        bool make_new_object = false;
 
         std::vector<std::string> filenames;
         std::string save_filename = "saved_catalogue.csv";
 
-        std::cout << "Welcome to the Star Catalogue!" << std::endl;
-        std::cout << "Use 'j' to move down the menu, 'k' to move up the menu and 'q' to quit." << std::endl << std::endl;
-
         while (true) {
-            for (int i = 0; i < 5; i++) {
+            std::cout << "Welcome to the Star Catalogue!" << std::endl;
+            std::cout << "Use 'j' to move down the menu, 'k' to move up the menu and 'q' to quit." << std::endl << std::endl;
+            for (int i = 0; i < num_options; i++) {
                 if (arrow_pos == i) {
                     std::cout << " -> ";
                 } else {
@@ -241,12 +299,16 @@ namespace ui {
                         std::cout << "Load files into catalogue" << std::endl;
                         break;
                     case 2:
-                        std::cout << "Print catalogue" << std::endl;
+                        std::cout << "Add object to catalogue" << std::endl;
+                        make_new_object = true;
                         break;
                     case 3:
-                        std::cout << "Save catalogue" << std::endl;
+                        std::cout << "Print catalogue" << std::endl;
                         break;
                     case 4:
+                        std::cout << "Save catalogue" << std::endl;
+                        break;
+                    case 5:
                         std::cout << "Exit" << std::endl;
                         break;
                     default:
@@ -254,12 +316,14 @@ namespace ui {
                         break;
                 }
             }
-            if (execute_option) {
+            if (execute_option && make_new_object) {
+                std::shared_ptr<AstroObject> new_object = catalogue.make_usr_object();
+            } else if (execute_option) {
                 execute_appropriate_function(arrow_pos, catalogue, filenames, save_filename);
                 execute_option = false;
                 clear_terminal();
             } else {
-                handle_menu_keypress(execute_option, 5, arrow_pos);
+                handle_menu_keypress(execute_option, 6, arrow_pos);
             }
         }
     }

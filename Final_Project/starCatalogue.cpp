@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "starCatalogue.h"
+#include "ui.h"
 
 StarCatalogue::StarCatalogue()
 {
@@ -162,6 +163,20 @@ std::shared_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)
     return object_ptr;
 }
 
+std::shared_ptr<AstroObject> StarCatalogue::make_usr_object() {
+    // Get type of object to create
+    int usr_choice = ui::make_usr_object_menu();
+    switch (usr_choice)
+    {
+    case 0:
+        // Make a Galaxy object
+        
+        break;
+    
+    default:
+        break;
+    }
+}
 
 void StarCatalogue::add_object(std::string& sectionName, std::shared_ptr<AstroObject>& obj_ptr) {
     auto it = m_catalogue.find(sectionName);
