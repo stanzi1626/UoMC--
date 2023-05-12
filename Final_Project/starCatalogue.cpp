@@ -2,6 +2,7 @@
 #include <list>
 #include <fstream>
 #include <algorithm>
+#include <limits>
 
 #include "starCatalogue.h"
 #include "ui.h"
@@ -123,42 +124,29 @@ std::shared_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)
     if (line.find("Galaxy") != std::string::npos) {
         // Make a Galaxy object
         object_ptr = std::make_shared<Galaxy>(line);
-        // Print if the object was successfully created
-        if (object_ptr) {
-            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
-        }
     }
     else if (line.find("Star") != std::string::npos) {
         // Make a Star object
         object_ptr = std::make_shared<Star>(line);
-        if (object_ptr) {
-            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
-        }
     }
     else if (line.find("Planet") != std::string::npos) {
         // Make a Planet object
         object_ptr = std::make_shared<Planet>(line);
-        if (object_ptr) {
-            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
-        }
     }
     else if (line.find("Stellar Nebula") != std::string::npos) {
         // Make a Stellar Nebula object
         object_ptr = std::make_shared<StellarNebula>(line);
-        if (object_ptr) {
-            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
-        }
     }
     else if (line.find("Solar System") != std::string::npos) {
         // Make an Solar System object
         object_ptr = std::make_shared<SolarSystem>(line);
-        if (object_ptr) {
-            std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
-        }
     }
     else {
         std::cout << "Error: Unknown object type." << std::endl;
         return nullptr;
+    }
+    if (object_ptr) {
+        std::cout << "Object created with name: " << object_ptr->get_astro_name() << std::endl;
     }
     return object_ptr;
 }
@@ -207,6 +195,25 @@ int number_check(const double min, const double max) {
     return usr_number;
 }
 
+std::string galaxy_type_check()
+{
+    std::string usr_galaxy_type;
+    bool isValidInput = false;
+
+    while (!isValidInput) {
+        std::cout << "Please enter the type of galaxy (E0, E3, E5, E7, S0, Sa, Sb, Sc, SBa, SBb, SBc, Irr): ";
+        std::getline(std::cin, usr_galaxy_type);
+
+        auto it = hubble_type.find(usr_galaxy_type);
+        if (it == hubble_type.end()) {
+            std::cout << "Invalid input. Please enter a valid galaxy type." << std::endl;
+        } else {
+            isValidInput = true;
+        }
+    }
+    return usr_galaxy_type;
+}
+
 void StarCatalogue::make_usr_object() {
     std::shared_ptr<AstroObject> object_ptr;
     // Get type of object to create
@@ -217,27 +224,65 @@ void StarCatalogue::make_usr_object() {
     // Get name of object from user
     std::cout << "Enter the name of the object: ";
     std::string usr_object_name = string_check();
+    std::cout << "Enter the ascension of the object: ";
+    double usr_ascension = number_check(0, 360);
+    std::cout << "Enter the declination of the object: ";
+    double usr_declination = number_check(-90, 90);
+    std::cout << "Enter the apparent magnitude of the object: ";
+    double usr_apparent_magnitude = number_check(1, 6);
+    std::cout << "Enter the redshift of the object: ";
+    double usr_redshift = number_check(0, std::numeric_limits<double>::infinity());
+    std::cout << "Enter the distance of the object from Earth: ";
+    double usr_distance = number_check(0, std::numeric_limits<double>::infinity());
+
     // Create object
     if (usr_choice == 0) {
         // Make a Galaxy object
-        double usr_mass = number_check(0, 1e12);
-        object_ptr = std::make_shared<Galaxy>(usr_object_name, usr_mass);
+        std::string usr_galaxy_type = galaxy_type_check();
+        std::cout << "Enter the stellar mass fraction of the object: ";
+        double usr_stellar_mass_fraction = number_check(0, 1);
+        object_ptr = std::make_shared<Galaxy>(usr_object_name, usr_ascension, usr_declination, 
+                                              usr_apparent_magnitude, usr_redshift, usr_distance,
+                                              usr_galaxy_type, usr_stellar_mass_fraction);
     } else if (usr_choice == 1) {
         // Make a Stellar Nebula object
-        double usr_mass = number_check(0, 1e12);
-        object_ptr = std::make_shared<StellarNebula>(usr_object_name, usr_mass);
+        object_ptr = std::make_shared<StellarNebula>(usr_object_name, usr_ascension, usr_declination, 
+                                                     usr_apparent_magnitude, usr_redshift, usr_distance);
     } else if (usr_choice == 2) {
         // Make a Solar System object
-        double usr_age = number_check(0, 1e12);
-        object_ptr = std::make_shared<SolarSystem>(usr_object_name, usr_age);
+        object_ptr = std::make_shared<SolarSystem>(usr_object_name, usr_ascension, usr_declination, 
+                                                   usr_apparent_magnitude, usr_redshift, usr_distance);
     } else if (usr_choice == 3) {
         // Make a Star object
+        std::cout << "Enter the mass of the object: ";
         double usr_mass = number_check(0, 1e12);
-        object_ptr = std::make_shared<Star>(usr_object_name, usr_mass);
+        std::cout << "Enter the radius of the object: ";
+        double usr_radius = number_check(0, 1e12);
+        std::cout << "Enter the temperature of the object: ";
+        double usr_temperature = number_check(0, 1e12);
+        std::cout << "Enter the metallicty of the object: ";
+        double usr_metallicity = number_check(0, 1);
+        object_ptr = std::make_shared<Star>(usr_object_name, usr_mass, usr_ascension, usr_declination, 
+                                            usr_apparent_magnitude, usr_redshift, usr_distance,
+                                            usr_radius, usr_temperature, usr_metallicity);
     } else if (usr_choice == 4) {
         // Make a Planet object
+        std::cout << "Enter the mass of the object: ";
         double usr_mass = number_check(0, 1e12);
-        object_ptr = std::make_shared<Planet>(usr_object_name, usr_mass);
+        std::cout << "Enter the radius of the object: ";
+        double usr_radius = number_check(0, 1e12);
+        std::cout << "Enter the number of moons of the object: ";
+        int usr_num_moons = number_check(0, 100);
+        std::cout << "Enter the orbital period of the object: ";
+        double usr_orbital_period = number_check(0, 500);
+        std::cout << "Enter the rotation period of the object: ";
+        double usr_rotation_period = number_check(0, 500);
+        std::cout << "Enter the orbital eccentricity of the object: ";
+        double usr_orbital_eccentricity = number_check(0, 1);
+        object_ptr = std::make_shared<Planet>(usr_object_name, usr_mass, usr_ascension, usr_declination, 
+                                              usr_apparent_magnitude, usr_redshift, usr_distance,
+                                              usr_radius, usr_num_moons, usr_orbital_period,
+                                              usr_rotation_period, usr_orbital_eccentricity);
     } else {
         std::cout << "Error: Unknown object type." << std::endl;
     }
@@ -282,8 +327,13 @@ void StarCatalogue::set_object_relationships() {
         for (const auto& item : section_ptr->get_items()) {
             if (item->get_parent_name() != "") {
                 std::shared_ptr<AstroObject> parent_ptr = get_object(item->get_parent_name());
-                item->set_parent(parent_ptr);
-                parent_ptr->add_child(item);
+                if (parent_ptr == nullptr) {
+                    std::cout << "Error: Parent object with name " << item->get_parent_name() << " not found." << std::endl;
+                    continue;
+                } else {    
+                    item->set_parent(parent_ptr);
+                    parent_ptr->add_child(item);
+                }
             }
         }
     }
@@ -379,7 +429,7 @@ void StarCatalogue::save_to_csv(const std::string& filename) const {
     }
 
 
-    file << std::string("Type, Name, Parent name, Mass, Age") << std::endl;
+    file << std::string("Type,Name,Parent Name,Mass,Ascension,Declination,Apparent Magnitude,Redshift,Distance from Earth,Galaxy Type,Stellar Mass Fraction,Radius,Temperature,Metalicity,Number of Moons,Orbital Period,Rotation Period,Orbital Eccentricity") << std::endl;
     for (const auto& section : m_catalogue) {
         for (const auto& item : section.second->get_items()) {
             file << item->get_info() << std::endl;

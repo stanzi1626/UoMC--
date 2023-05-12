@@ -1,0 +1,30 @@
+﻿Type,Name,Parent Name,Mass,Ascension,Declination,Apparent Magnitude,Redshift,Distance from Earth,Galaxy Type,Stellar Mass Fraction,Radius,Temperature,Metalicity,Number of Moons,Orbital Period,Rotation Period,Orbital Eccentricity
+Galaxy,Andromeda,,,10.684708,-0.301316,3.44,0.000076,2.537,Sa,0.8,,,,,,,
+Galaxy,Milky Way,,,12.959111,27.293064,-20.5,0,0,SBb,0.75,,,,,,,
+Galaxy,Whirlpool Galaxy,,,13.169063,47.195258,8.69,0.001036,23.8,Sa,0.72,,,,,,,
+Galaxy,Triangulum Galaxy,,,1.551425,30.660624,5.72,0.000053,3,Sa,0.85,,,,,,,
+Galaxy,NGC 1407, ,,2.315,5.095,11.4,0.0046,70.3, E5,0.1, , , , , , ,
+Galaxy,NGC 1234,, ,8.123456,-12.345678,9.3,0.000042,4.561,Sb,0.6,,,,,,,
+Galaxy,NGC 5678,, ,12.987654,5.432109,11.8,0.000065,3.789,E1,0.8,,,,,,,
+Planet,Mercury,Sun,3.30E+23,4.614065,-0.768907,-0.42,0.0005,0.39,,,2439.7,,,0,88,58.6462,0.2056
+Planet,Venus,Sun,4.87E+24,1.421617,5.545028,-4.4,0.0007,0.72,,,6051.8,,,0,225,116.75,0.0067
+Planet,Mars,Sun,6.42E+23,10.661389,23.943629,-2.91,0.0009,1.52,,,3389.5,,,2,687,1.03,0.0934
+Planet,Jupiter,Sun,1.90E+27,2.322368,2.665731,-2.94,0.0005,5.2,,,69911,,,79,4332.59,0.41,0.0136
+Planet,Neptune,Sun,1.02E+26,20.456789,3.456789,-6.9,0,30.567,,,24622,,,14,165.3,0.72,0.0321
+Planet,Pluto,Sun,1.30E+22,7.890123,-5.678901,14.6,0,39.012,,,1188,,,5,248.1,6.39,0.2445
+Solar System,Solar System,Milky Way,,0,0,-26.74,0,0,,,,,,,,,
+Solar System,Sirius System,Milky Way,,6.752481,-16.716116,-1.46,0.0034,8.611, ,,,,,,,,
+Solar System,Kepler-90,Milky Way,,18.88383,49.315383,14.4,0,1062.75,,,,,,,,,
+Solar System,Alpha Centauri System,NGC 1234, ,14.56789,-60.789012,-10.2,0.0034,0,,,,,,,,,
+Solar System,Proxima Centauri System,NGC 5678, ,14.56789,-61.789012,-11.3,0.0034,0,,,,,,,,,
+Star,Sun,Solar System,1.99E+30,18.884698,49.281021,-26.74,0,0,,,696340,5500,0.02,,,,
+Star,Sirius A,Sirius System,2.02E+30,6.752481,-16.716116,-1.46,0.0034,8.611,,,1711000,9940,0.03,,,,
+Star,Alpha Centauri A,Milky Way,2.19E+30,14.660727,-60.833906,-0.01,0.0005,4.367,,,1200000,8000,0.02,,,,
+Star,Betelgeuse,NGC 1234,2.50E+31,5.678901,7.890123,-9.5,0.001,10.345,,,800000000,3500,0.01,,,,
+Star,Sirius C,Sirius System,1.20E+29,6.752481,-16.716116,11.2,0.0034,8.611,,,500000,15000,0.03,,,,
+Star ,Sirius B,Sirius System,3.33E+29,6.752481,-16.716116,11.18,0.0034,8.611,, ,8728,25200,0.002, , , ,
+Stellar Nebula,Orion Nebula,Milky Way,,5.575329,1.991824,4,0.00001,0.001,,,,,,,,,
+Stellar Nebula,Eagle Nebula,Milky Way,,18.181979,-13.504364,6,0.00002,0.002,,,,,,,,,
+Stellar Nebula,Trifid Nebula,Milky Way,,18.221464,-23.981972,6,0.00008,2.2,,,,,,,,,
+Stellar Nebula,Helix Nebula,NGC 1234,,16.789012,-25.678901,7.5,0.000015,1.234,,,,,,,,,
+Stellar Nebula,Crab Nebula,NGC 5678,,5.432109,7.890123,8.2,0.000025,2.345,,,,,,,,,
