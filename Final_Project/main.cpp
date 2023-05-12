@@ -1,6 +1,6 @@
 #include <iostream>
-#include "StarCatalogue.h"
 #include "ui.h"
+#include "starCatalogue.h"
 
 int main() {
     // Clear the terminal

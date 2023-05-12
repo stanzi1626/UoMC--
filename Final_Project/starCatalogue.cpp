@@ -163,27 +163,95 @@ std::shared_ptr<AstroObject> StarCatalogue::make_object(const std::string& line)
     return object_ptr;
 }
 
-std::shared_ptr<AstroObject> StarCatalogue::make_usr_object() {
-    // Get type of object to create
-    int usr_choice = ui::make_usr_object_menu();
-    switch (usr_choice)
-    {
-    case 0:
-        // Make a Galaxy object
-        
-        break;
-    
-    default:
-        break;
+std::string string_check() {
+    std::string usr_string;
+    std::getline(std::cin, usr_string);
+
+    std::string input;
+    bool isValidInput = false;
+
+    while (!isValidInput) {
+        std::cout << "The string you entered is: " << usr_string << ". Press enter to continue or type 'r' to re-enter." << std::endl;
+        std::getline(std::cin, input);
+
+        if (input.empty()) {
+            isValidInput = true;
+        } else if (input == "r") {
+            std::cout << "Please re-enter the string: ";
+            std::getline(std::cin, usr_string);
+        } else {
+            std::cout << "Invalid input. Please try again." << std::endl;
+        }
     }
+    return usr_string;
 }
 
-void StarCatalogue::add_object(std::string& sectionName, std::shared_ptr<AstroObject>& obj_ptr) {
+int number_check(const double min, const double max) {
+    int usr_number;
+    bool isValidInput = false;
+
+    while (!isValidInput) {
+        std::cout << "Please enter a number between " << min << " and " << max << ": ";
+        std::cin >> usr_number;
+
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(256, '\n');
+            std::cout << "Invalid input. Please enter a valid number." << std::endl;
+        } else if (usr_number < min || usr_number > max) {
+            std::cout << "Number out of range. Please enter a number between " << min << " and " << max << "." << std::endl;
+        } else {
+            isValidInput = true;
+        }
+    }
+    return usr_number;
+}
+
+void StarCatalogue::make_usr_object() {
+    std::shared_ptr<AstroObject> object_ptr;
+    // Get type of object to create
+    int usr_choice = ui::make_usr_object_menu();
+    if (usr_choice == -1) {
+        return;
+    }
+    // Get name of object from user
+    std::cout << "Enter the name of the object: ";
+    std::string usr_object_name = string_check();
+    // Create object
+    if (usr_choice == 0) {
+        // Make a Galaxy object
+        double usr_mass = number_check(0, 1e12);
+        object_ptr = std::make_shared<Galaxy>(usr_object_name, usr_mass);
+    } else if (usr_choice == 1) {
+        // Make a Stellar Nebula object
+        double usr_mass = number_check(0, 1e12);
+        object_ptr = std::make_shared<StellarNebula>(usr_object_name, usr_mass);
+    } else if (usr_choice == 2) {
+        // Make a Solar System object
+        double usr_age = number_check(0, 1e12);
+        object_ptr = std::make_shared<SolarSystem>(usr_object_name, usr_age);
+    } else if (usr_choice == 3) {
+        // Make a Star object
+        double usr_mass = number_check(0, 1e12);
+        object_ptr = std::make_shared<Star>(usr_object_name, usr_mass);
+    } else if (usr_choice == 4) {
+        // Make a Planet object
+        double usr_mass = number_check(0, 1e12);
+        object_ptr = std::make_shared<Planet>(usr_object_name, usr_mass);
+    } else {
+        std::cout << "Error: Unknown object type." << std::endl;
+    }
+    // Add object to catalogue
+    if (object_ptr) {
+        add_object(object_ptr->get_type(), object_ptr);
+    }
+    // Clear input buffer
+    std::cin.clear();
+    std::cin.ignore(256, '\n');
+}
+
+void StarCatalogue::add_object(const std::string& sectionName, std::shared_ptr<AstroObject>& obj_ptr) {
     auto it = m_catalogue.find(sectionName);
-    // if (it != m_catalogue.end()) {
-    //     Section* section = it->second.get();
-    //     section->add_object(std::move(objPtr));
-    // }
     if (it != m_catalogue.end()) {
         it->second->add_object(obj_ptr);
     }
