@@ -328,13 +328,13 @@ std::string Galaxy::get_info() const {
 }
 
 std::string Star::get_info() const {
-    std::string star_info = std::string("Galaxy") + std::string(",") + m_name + std::string(",") +
+    std::string star_info = std::string("Star") + std::string(",") + m_name + std::string(",") +
                               m_parent_name + std::string(",") + std::to_string(m_mass) + std::string(",") +
                               std::to_string(m_ascension) + std::string(",") + std::to_string(m_declination) +
                               std::string(",") + std::to_string(m_apparent_magnitude) + std::string(",") +
                               std::to_string(m_redshift) + std::string(",") + std::to_string(m_distance_from_earth) +
-                              std::string(",")+ std::string(",") +
-                              std::string(",") + std::string(",") + std::to_string(m_temperature) +
+                              std::string(",") + std::string(",") + std::string(",") + std::to_string(m_radius) +
+                              std::string(",") + std::to_string(m_temperature) +
                               std::string(",") + std::to_string(m_metalicity) + std::string(",") +
                               std::string(",") + std::string(",") +
                               std::string(",");
@@ -342,7 +342,7 @@ std::string Star::get_info() const {
 }
 
 std::string Planet::get_info() const {
-    std::string planet_info = std::string("Galaxy") + std::string(",") + m_name + std::string(",") +
+    std::string planet_info = std::string("Planet") + std::string(",") + m_name + std::string(",") +
                               m_parent_name + std::string(",") + std::to_string(m_mass) + std::string(",") +
                               std::to_string(m_ascension) + std::string(",") + std::to_string(m_declination) +
                               std::string(",") + std::to_string(m_apparent_magnitude) + std::string(",") +
@@ -356,7 +356,7 @@ std::string Planet::get_info() const {
 }
 
 std::string StellarNebula::get_info() const {
-    std::string nebula_info = std::string("Galaxy") + std::string(",") + m_name + std::string(",") +
+    std::string nebula_info = std::string("Stellar Nebula") + std::string(",") + m_name + std::string(",") +
                               m_parent_name + std::string(",") + std::string(",") +
                               std::to_string(m_ascension) + std::string(",") + std::to_string(m_declination) +
                               std::string(",") + std::to_string(m_apparent_magnitude) + std::string(",") +
@@ -370,7 +370,7 @@ std::string StellarNebula::get_info() const {
 }
 
 std::string SolarSystem::get_info() const {
-    std::string solar_system_info = std::string("Galaxy") + std::string(",") + m_name + std::string(",") +
+    std::string solar_system_info = std::string("Solar System") + std::string(",") + m_name + std::string(",") +
                               m_parent_name + std::string(",") + std::string(",") +
                               std::to_string(m_ascension) + std::string(",") + std::to_string(m_declination) +
                               std::string(",") + std::to_string(m_apparent_magnitude) + std::string(",") +
